@@ -67,13 +67,6 @@ namespace DevIO.Business.Services
             return true;
         }
 
-        public async Task UpdateEnderecoAsync(Endereco endereco)
-        {
-            if (!Validate(new EnderecoValidator(), endereco)) return;
-
-            await _enderecoRepository.UpdateAsync(endereco);
-        }
-
         public async Task<bool> DeleteAsync(Guid id)
         {
             if (_fornecedorRepository.GetFornecedorProdutosEnderecoAsync(id).Result.Produtos.Any())

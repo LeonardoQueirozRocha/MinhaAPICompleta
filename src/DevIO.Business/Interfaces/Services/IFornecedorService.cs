@@ -10,6 +10,5 @@ namespace DevIO.Business.Interfaces.Services
         Task<bool> AddAsync(Fornecedor fornecedor);
         Task<bool> UpdateAsync(Fornecedor fornecedor);
         Task<bool> DeleteAsync(Guid id);
-        Task UpdateEnderecoAsync(Endereco endereco);
     }
 }
