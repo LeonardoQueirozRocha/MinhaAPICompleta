@@ -47,7 +47,7 @@ namespace DevIO.Api.Controllers
 
             if (!result) return BadRequest();
 
-            return Ok(fornecedor);
+            return Ok(fornecedorViewModel);
         }
 
         [HttpPut("{id:guid}")]
@@ -66,15 +66,15 @@ namespace DevIO.Api.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<Fornecedor>> DeleteAsync(Guid id)
         {
-            var fornecedor = await GetFornecedorEnderecoAsync(id);
+            var fornecedorViewModel = await GetFornecedorEnderecoAsync(id);
 
-            if (fornecedor != null) return NotFound();
+            if (fornecedorViewModel == null) return NotFound();
 
             var result = await _fornecedorService.DeleteAsync(id);
 
             if (!result) return BadRequest();
 
-            return Ok(fornecedor);
+            return Ok(fornecedorViewModel);
         }
 
         private async Task<FornecedorViewModel> GetFornecedorProdutosEnderecoAsync(Guid id)
