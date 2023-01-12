@@ -7,9 +7,9 @@ namespace DevIO.Business.Interfaces.Services
         Task<IEnumerable<Fornecedor>> GetAllAsync();
         Task<Fornecedor> GetFornecedorEnderecoAsync(Guid id);
         Task<Fornecedor> GetFornecedorProdutosEnderecoAsync(Guid id);
-        Task AddAsync(Fornecedor fornecedor);
-        Task UpdateAsync(Fornecedor fornecedor);
-        Task DeleteAsync(Guid id);
+        Task<bool> AddAsync(Fornecedor fornecedor);
+        Task<bool> UpdateAsync(Fornecedor fornecedor);
+        Task<bool> DeleteAsync(Guid id);
         Task UpdateEnderecoAsync(Endereco endereco);
     }
 }
