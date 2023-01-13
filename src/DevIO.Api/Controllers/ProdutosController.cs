@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DevIO.Api.Controllers.Base;
-using DevIO.Api.ViewModels;
+using DevIO.Api.Dtos;
 using DevIO.Business.Interfaces.Notifications;
 using DevIO.Business.Interfaces.Services;
 using DevIO.Business.Models;
@@ -27,13 +27,13 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ProdutoViewModel>> GetAllAsync()
+        public async Task<IEnumerable<ProdutoDto>> GetAllAsync()
         {
-            return _mapper.Map<IEnumerable<ProdutoViewModel>>(await _produtoService.GetProdutosFornecedoresAsync());
+            return _mapper.Map<IEnumerable<ProdutoDto>>(await _produtoService.GetProdutosFornecedoresAsync());
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<ProdutoViewModel>> GetByIdAsync(Guid id)
+        public async Task<ActionResult<ProdutoDto>> GetByIdAsync(Guid id)
         {
             var produtoViewModel = await GetProdutoAsync(id);
 
@@ -43,7 +43,7 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ProdutoViewModel>> CreateAsync(ProdutoViewModel produtoViewModel)
+        public async Task<ActionResult<ProdutoDto>> CreateAsync(ProdutoDto produtoViewModel)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
@@ -60,7 +60,7 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-        public async Task<ActionResult<ProdutoViewModel>> DeleteAsync(Guid id)
+        public async Task<ActionResult<ProdutoDto>> DeleteAsync(Guid id)
         {
             var produtoViewModel = await GetProdutoAsync(id);
 
@@ -73,9 +73,9 @@ namespace DevIO.Api.Controllers
             return CustomResponse(produtoViewModel);
         }
 
-        private async Task<ProdutoViewModel> GetProdutoAsync(Guid id)
+        private async Task<ProdutoDto> GetProdutoAsync(Guid id)
         {
-            return _mapper.Map<ProdutoViewModel>(await _produtoService.GetProdutoFornecedorAsync(id));
+            return _mapper.Map<ProdutoDto>(await _produtoService.GetProdutoFornecedorAsync(id));
         }
     }
 }

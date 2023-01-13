@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using DevIO.Api.ViewModels;
+using DevIO.Api.Dtos;
 using DevIO.Business.Models;
 
 namespace DevIO.Api.Configurations
@@ -8,9 +8,9 @@ namespace DevIO.Api.Configurations
     {
         public AutoMapperConfig()
         {
-            CreateMap<Fornecedor, FornecedorViewModel>().ReverseMap();
-            CreateMap<Endereco, EnderecoViewModel>().ReverseMap();
-            CreateMap<Produto, ProdutoViewModel>().ReverseMap();
+            CreateMap<Fornecedor, FornecedorDto>().ReverseMap();
+            CreateMap<Endereco, EnderecoDto>().ReverseMap();
+            CreateMap<Produto, ProdutoDto>().ReverseMap();
         }
     }
 }
