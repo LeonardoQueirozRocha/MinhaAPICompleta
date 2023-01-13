@@ -36,19 +36,19 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> UpdateAsync(Guid id, EnderecoDto enderecoViewModel)
+        public async Task<IActionResult> UpdateAsync(Guid id, EnderecoDto enderecoDto)
         {
-            if (id != enderecoViewModel.Id)
+            if (id != enderecoDto.Id)
             {
                 ReportError("O id informado não é o mesmo que foi passado na query");
-                return CustomResponse(enderecoViewModel);
+                return CustomResponse(enderecoDto);
             }
 
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            await _enderecoService.UpdateAsync(_mapper.Map<Endereco>(enderecoViewModel));
+            await _enderecoService.UpdateAsync(_mapper.Map<Endereco>(enderecoDto));
 
-            return CustomResponse(enderecoViewModel);
+            return CustomResponse(enderecoDto);
         }
     }
 }

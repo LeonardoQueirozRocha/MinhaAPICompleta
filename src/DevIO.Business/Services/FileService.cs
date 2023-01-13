@@ -10,14 +10,14 @@ namespace DevIO.Business.Services
 
         public async Task<bool> UploadAsync(string file, string fileName)
         {
-            var fileDataByteArray = Convert.FromBase64String(file);
+            var bytes = Convert.FromBase64String(file);
 
             if (string.IsNullOrEmpty(file))
             {
                 Notify("Forneça uma imagem para este produto!");
                 return false;
             }
-
+                
             var path = GetFilePath(fileName);
 
             if (File.Exists(path))
@@ -26,7 +26,7 @@ namespace DevIO.Business.Services
                 return false;
             }
 
-            await File.WriteAllBytesAsync(path, fileDataByteArray);
+            await File.WriteAllBytesAsync(path, bytes);
 
             return true;
         }
