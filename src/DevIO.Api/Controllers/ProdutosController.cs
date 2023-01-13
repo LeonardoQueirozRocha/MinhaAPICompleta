@@ -66,6 +66,8 @@ namespace DevIO.Api.Controllers
 
             if (produtoViewModel == null) return NotFound();
 
+            _fileService.Delete(produtoViewModel.Imagem);
+
             await _produtoService.DeleteAsync(id);
 
             return CustomResponse(produtoViewModel);

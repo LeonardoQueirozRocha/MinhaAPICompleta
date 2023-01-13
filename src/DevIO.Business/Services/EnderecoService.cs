@@ -18,6 +18,11 @@ namespace DevIO.Business.Services
             _enderecoRepository = enderecoRepository;
         }
 
+        public async Task<IEnumerable<Endereco>> GetAllAsync()
+        {
+            return await _enderecoRepository.GetAllAsync();
+        }
+
         public async Task<Endereco> GetByIdAsync(Guid id)
         {
             return await _enderecoRepository.GetByIdAsync(id);

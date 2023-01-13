@@ -23,6 +23,12 @@ namespace DevIO.Api.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet]
+        public async Task<IEnumerable<EnderecoViewModel>> GetAllAsync()
+        {
+            return _mapper.Map<IEnumerable<EnderecoViewModel>>(await _enderecoService.GetAllAsync());
+        }
+
         [HttpGet("{id:guid}")]
         public async Task<EnderecoViewModel> GetByIdAsync(Guid id)
         {
