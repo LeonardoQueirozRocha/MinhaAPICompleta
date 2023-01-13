@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DevIO.Api.ViewModels
+namespace DevIO.Api.Dtos
 {
-    public class EnderecoViewModel
+    public class EnderecoDto
     {
         [Key]
         public Guid Id { get; set; }

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DevIO.Api.Controllers.Base;
-using DevIO.Api.ViewModels;
+using DevIO.Api.Dtos;
 using DevIO.Business.Interfaces.Notifications;
 using DevIO.Business.Interfaces.Services;
 using DevIO.Business.Models;
@@ -24,19 +24,19 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<EnderecoViewModel>> GetAllAsync()
+        public async Task<IEnumerable<EnderecoDto>> GetAllAsync()
         {
-            return _mapper.Map<IEnumerable<EnderecoViewModel>>(await _enderecoService.GetAllAsync());
+            return _mapper.Map<IEnumerable<EnderecoDto>>(await _enderecoService.GetAllAsync());
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<EnderecoViewModel> GetByIdAsync(Guid id)
+        public async Task<EnderecoDto> GetByIdAsync(Guid id)
         {
-            return _mapper.Map<EnderecoViewModel>(await _enderecoService.GetByIdAsync(id));
+            return _mapper.Map<EnderecoDto>(await _enderecoService.GetByIdAsync(id));
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> UpdateAsync(Guid id, EnderecoViewModel enderecoViewModel)
+        public async Task<IActionResult> UpdateAsync(Guid id, EnderecoDto enderecoViewModel)
         {
             if (id != enderecoViewModel.Id)
             {

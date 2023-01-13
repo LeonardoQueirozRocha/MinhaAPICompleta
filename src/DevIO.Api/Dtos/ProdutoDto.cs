@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DevIO.Api.ViewModels
+namespace DevIO.Api.Dtos
 {
-    public class ProdutoViewModel
+    public class ProdutoDto
     {
         [Key]
         public Guid Id { get; set; }

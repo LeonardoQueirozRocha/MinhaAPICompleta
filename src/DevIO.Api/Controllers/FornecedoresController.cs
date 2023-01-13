@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DevIO.Api.Controllers.Base;
-using DevIO.Api.ViewModels;
+using DevIO.Api.Dtos;
 using DevIO.Business.Interfaces.Notifications;
 using DevIO.Business.Interfaces.Services;
 using DevIO.Business.Models;
@@ -24,13 +24,13 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<FornecedorViewModel>> GetAllAsync()
+        public async Task<IEnumerable<FornecedorDto>> GetAllAsync()
         {
-            return _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorService.GetAllAsync());
+            return _mapper.Map<IEnumerable<FornecedorDto>>(await _fornecedorService.GetAllAsync());
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<FornecedorViewModel>> GetbyIdAsync(Guid id)
+        public async Task<ActionResult<FornecedorDto>> GetbyIdAsync(Guid id)
         {
             var fornecedorViewModel = await GetFornecedorProdutosEnderecoAsync(id);
 
@@ -40,7 +40,7 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<FornecedorViewModel>> CreateAsync(FornecedorViewModel fornecedorViewModel)
+        public async Task<ActionResult<FornecedorDto>> CreateAsync(FornecedorDto fornecedorViewModel)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
@@ -50,7 +50,7 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<ActionResult<FornecedorViewModel>> UpdateAsync(Guid id, FornecedorViewModel fornecedorViewModel)
+        public async Task<ActionResult<FornecedorDto>> UpdateAsync(Guid id, FornecedorDto fornecedorViewModel)
         {
             if (id != fornecedorViewModel.Id)
             {
@@ -77,14 +77,14 @@ namespace DevIO.Api.Controllers
             return CustomResponse(fornecedorViewModel);
         }
 
-        private async Task<FornecedorViewModel> GetFornecedorProdutosEnderecoAsync(Guid id)
+        private async Task<FornecedorDto> GetFornecedorProdutosEnderecoAsync(Guid id)
         {
-            return _mapper.Map<FornecedorViewModel>(await _fornecedorService.GetFornecedorProdutosEnderecoAsync(id));
+            return _mapper.Map<FornecedorDto>(await _fornecedorService.GetFornecedorProdutosEnderecoAsync(id));
         }
 
-        private async Task<FornecedorViewModel> GetFornecedorEnderecoAsync(Guid id)
+        private async Task<FornecedorDto> GetFornecedorEnderecoAsync(Guid id)
         {
-            return _mapper.Map<FornecedorViewModel>(await _fornecedorService.GetFornecedorEnderecoAsync(id));
+            return _mapper.Map<FornecedorDto>(await _fornecedorService.GetFornecedorEnderecoAsync(id));
         }
     }
 }
