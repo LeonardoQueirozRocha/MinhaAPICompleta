@@ -10,12 +10,15 @@ namespace DevIO.Business.Services
     public class ProdutoService : BaseService, IProdutoService
     {
         private readonly IProdutoRepository _produtoRepository;
+        private readonly IFileService _fileService;
 
         public ProdutoService(
             IProdutoRepository produtoRepository,
+            IFileService fileService,
             INotifier notifier) : base(notifier)
         {
             _produtoRepository = produtoRepository;
+            _fileService = fileService;
         }
 
         public async Task<IEnumerable<Produto>> GetProdutosFornecedoresAsync()
@@ -31,7 +34,7 @@ namespace DevIO.Business.Services
         public async Task AddAsync(Produto produto)
         {
             if (!Validate(new ProdutoValidator(), produto)) return;
-
+               
             await _produtoRepository.AddAsync(produto);
         }
 
@@ -44,6 +47,7 @@ namespace DevIO.Business.Services
 
         public async Task DeleteAsync(Guid id)
         {
+            _fileService.Delete(_produtoRepository.GetByIdAsync(id).Result.Imagem);
             await _produtoRepository.DeleteAsync(id);
         }
 
