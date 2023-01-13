@@ -33,9 +33,7 @@ namespace DevIO.Business.Services
 
         public void Delete(string fileName)
         {
-            var path = GetFilePath(fileName);
-
-            File.Delete(path);
+            File.Delete(GetFilePath(fileName));
         }
 
         private string GetFilePath(string fileName)
