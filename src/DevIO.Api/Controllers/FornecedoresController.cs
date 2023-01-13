@@ -32,49 +32,49 @@ namespace DevIO.Api.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<FornecedorDto>> GetbyIdAsync(Guid id)
         {
-            var fornecedorViewModel = await GetFornecedorProdutosEnderecoAsync(id);
+            var fornecedorDto = await GetFornecedorProdutosEnderecoAsync(id);
 
-            if (fornecedorViewModel == null) return NotFound();
+            if (fornecedorDto == null) return NotFound();
 
-            return fornecedorViewModel;
+            return fornecedorDto;
         }
 
         [HttpPost]
-        public async Task<ActionResult<FornecedorDto>> CreateAsync(FornecedorDto fornecedorViewModel)
+        public async Task<ActionResult<FornecedorDto>> CreateAsync(FornecedorDto fornecedorDto)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            await _fornecedorService.AddAsync(_mapper.Map<Fornecedor>(fornecedorViewModel));
+            await _fornecedorService.AddAsync(_mapper.Map<Fornecedor>(fornecedorDto));
 
-            return CustomResponse(fornecedorViewModel);
+            return CustomResponse(fornecedorDto);
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<ActionResult<FornecedorDto>> UpdateAsync(Guid id, FornecedorDto fornecedorViewModel)
+        public async Task<ActionResult<FornecedorDto>> UpdateAsync(Guid id, FornecedorDto fornecedorDto)
         {
-            if (id != fornecedorViewModel.Id)
+            if (id != fornecedorDto.Id)
             {
                 ReportError("O id informado não é o mesmo que foi passado na query");
-                return CustomResponse(fornecedorViewModel);
+                return CustomResponse(fornecedorDto);
             }
 
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            await _fornecedorService.UpdateAsync(_mapper.Map<Fornecedor>(fornecedorViewModel));
+            await _fornecedorService.UpdateAsync(_mapper.Map<Fornecedor>(fornecedorDto));
 
-            return CustomResponse(fornecedorViewModel);
+            return CustomResponse(fornecedorDto);
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<Fornecedor>> DeleteAsync(Guid id)
         {
-            var fornecedorViewModel = await GetFornecedorEnderecoAsync(id);
+            var fornecedorDto = await GetFornecedorEnderecoAsync(id);
 
-            if (fornecedorViewModel == null) return NotFound();
+            if (fornecedorDto == null) return NotFound();
 
             await _fornecedorService.DeleteAsync(id);
 
-            return CustomResponse(fornecedorViewModel);
+            return CustomResponse(fornecedorDto);
         }
 
         private async Task<FornecedorDto> GetFornecedorProdutosEnderecoAsync(Guid id)

@@ -35,42 +35,41 @@ namespace DevIO.Api.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<ProdutoDto>> GetByIdAsync(Guid id)
         {
-            var produtoViewModel = await GetProdutoAsync(id);
+            var produtoDto = await GetProdutoAsync(id);
 
-            if (produtoViewModel == null) return NotFound();
+            if (produtoDto == null) return NotFound();
 
-            return produtoViewModel;
+            return produtoDto;
         }
 
         [HttpPost]
-        public async Task<ActionResult<ProdutoDto>> CreateAsync(ProdutoDto produtoViewModel)
+        public async Task<ActionResult<ProdutoDto>> CreateAsync(ProdutoDto produtoDto)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            var imageName = Guid.NewGuid() + "_" + produtoViewModel.Imagem;
+            var imageName = $"{Guid.NewGuid()}_{produtoDto.Imagem}";
 
-            if (!await _fileService.UploadAsync(produtoViewModel.ImagemUpload, imageName))
-                return CustomResponse(produtoViewModel);
+            if (!await _fileService.UploadAsync(produtoDto.ImagemUpload, imageName)) return CustomResponse(produtoDto);
 
-            produtoViewModel.Imagem = imageName;
+            produtoDto.Imagem = imageName;
 
-            await _produtoService.AddAsync(_mapper.Map<Produto>(produtoViewModel));
+            await _produtoService.AddAsync(_mapper.Map<Produto>(produtoDto));
 
-            return CustomResponse(produtoViewModel);
+            return CustomResponse(produtoDto);
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<ProdutoDto>> DeleteAsync(Guid id)
         {
-            var produtoViewModel = await GetProdutoAsync(id);
+            var produtoDto = await GetProdutoAsync(id);
 
-            if (produtoViewModel == null) return NotFound();
+            if (produtoDto == null) return NotFound();
 
-            _fileService.Delete(produtoViewModel.Imagem);
+            _fileService.Delete(produtoDto.Imagem);
 
             await _produtoService.DeleteAsync(id);
 
-            return CustomResponse(produtoViewModel);
+            return CustomResponse(produtoDto);
         }
 
         private async Task<ProdutoDto> GetProdutoAsync(Guid id)
