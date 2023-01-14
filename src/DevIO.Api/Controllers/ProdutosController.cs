@@ -73,11 +73,37 @@ namespace DevIO.Api.Controllers
             return CustomResponse(produtoDto);
         }
 
-        [RequestSizeLimit(40000000)]
-        [HttpPost("image")]
-        public async Task<ActionResult> AddImageAsync(IFormFile file)
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> UpdateAsync(Guid id, ProdutoDto produtoDto)
         {
-            return Ok(file);
+            if (id != produtoDto.Id)
+            {
+                ReportError("O id informado não é o mesmo que foi passado na query");
+                return CustomResponse(produtoDto);
+            }
+
+            var produtoUpdate = await GetProdutoAsync(id);
+            produtoDto.Imagem = produtoUpdate.Imagem;
+
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+            if (produtoUpdate.ImagemUpload != null)
+            {
+                var imgName = Guid.NewGuid() + "_" + produtoDto.Imagem;
+
+                if (!await _fileService.UploadAsync(produtoDto.ImagemUpload, imgName)) return CustomResponse(produtoDto);
+
+                produtoUpdate.Imagem = imgName;
+            }
+
+            produtoUpdate.Nome = produtoDto.Nome;
+            produtoUpdate.Descricao = produtoDto.Descricao;
+            produtoUpdate.Valor = produtoDto.Valor;
+            produtoUpdate.Ativo = produtoDto.Ativo;
+
+            await _produtoService.UpdateAsync(_mapper.Map<Produto>(produtoDto));
+
+            return CustomResponse(produtoDto);
         }
 
         [HttpDelete("{id:guid}")]
