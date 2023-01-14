@@ -1,6 +1,7 @@
 ﻿using DevIO.Business.Interfaces.Notifications;
 using DevIO.Business.Interfaces.Services;
 using DevIO.Business.Services.Base;
+using Microsoft.AspNetCore.Http;
 
 namespace DevIO.Business.Services
 {
@@ -26,6 +27,28 @@ namespace DevIO.Business.Services
 
             var bytes = Convert.FromBase64String(file);
             await File.WriteAllBytesAsync(path, bytes);
+
+            return true;
+        }
+
+        public async Task<bool> UploadStreamingAsync(IFormFile file, string filePrefix)
+        {
+            if (file == null || file.Length == 0)
+            {
+                Notify("Forneça uma imagem para este produto!");
+                return false;
+            }
+
+            var path = GetFilePath(filePrefix + file.FileName);
+
+            if (File.Exists(path))
+            {
+                Notify("Já existe uma arquivo com este nome!");
+                return false;
+            }
+
+            using var stream = new FileStream(path, FileMode.Create);
+            await file.CopyToAsync(stream);
 
             return true;
         }

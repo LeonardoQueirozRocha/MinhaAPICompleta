@@ -58,6 +58,28 @@ namespace DevIO.Api.Controllers
             return CustomResponse(produtoDto);
         }
 
+        [HttpPost("streaming")]
+        public async Task<ActionResult<ProdutoDto>> CreateStreamingAsync(ProdutoImagemDto produtoDto)
+        {
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+            var imgPrefix = $"{Guid.NewGuid()}_";
+
+            if (!await _fileService.UploadStreamingAsync(produtoDto.ImagemUpload, imgPrefix)) return CustomResponse(produtoDto);
+
+            produtoDto.Imagem = imgPrefix + produtoDto.ImagemUpload.FileName;
+            await _produtoService.AddAsync(_mapper.Map<Produto>(produtoDto));
+
+            return CustomResponse(produtoDto);
+        }
+
+        [RequestSizeLimit(40000000)]
+        [HttpPost("image")]
+        public async Task<ActionResult> AddImageAsync(IFormFile file)
+        {
+            return Ok(file);
+        }
+
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<ProdutoDto>> DeleteAsync(Guid id)
         {
