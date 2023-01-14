@@ -19,11 +19,20 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Development", builder => builder.AllowAnyOrigin()
+                                                       .AllowAnyMethod()
+                                                       .AllowAnyHeader());
+});
+
 builder.Services.AddDependencies();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
+app.UseCors("Development");
 
 app.UseHttpsRedirection();
 
