@@ -37,6 +37,7 @@ namespace DevIO.Api.Configurations
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             return app;
