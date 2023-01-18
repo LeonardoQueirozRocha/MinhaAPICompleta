@@ -1,8 +1,13 @@
 ﻿using DevIO.Api.Controllers.Base;
 using DevIO.Api.Dtos;
+using DevIO.Api.Extensions;
 using DevIO.Business.Interfaces.Notifications;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 
 namespace DevIO.Api.Controllers
 {
@@ -11,14 +16,17 @@ namespace DevIO.Api.Controllers
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly AppSettings _appSettings;
 
         public AuthController(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
+            IOptions<AppSettings> appSettings,
             INotifier notifier) : base(notifier)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _appSettings = appSettings.Value;
         }
 
         [HttpPost("new-account")]
@@ -37,7 +45,7 @@ namespace DevIO.Api.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
-                return CustomResponse(registerUser);
+                return CustomResponse(GenerateJwtAsync());
             }
 
             foreach (var error in result.Errors) ReportError(error.Description);
@@ -52,7 +60,7 @@ namespace DevIO.Api.Controllers
 
             var result = await _signInManager.PasswordSignInAsync(loginUser.Email, loginUser.Password, false, true);
 
-            if (result.Succeeded) return CustomResponse(loginUser);
+            if (result.Succeeded) return CustomResponse(GenerateJwtAsync());
 
             if (result.IsLockedOut)
             {
@@ -62,6 +70,22 @@ namespace DevIO.Api.Controllers
 
             ReportError("Usuário ou Senha incorretos");
             return CustomResponse(loginUser);
+        }
+
+        private string GenerateJwtAsync()
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
+            {
+                Issuer = _appSettings.Issuer,
+                Audience = _appSettings.ValidIn,
+                Expires = DateTime.UtcNow.AddHours(_appSettings.ExpirationHours),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            });
+
+            var encodedToken = tokenHandler.WriteToken(token);
+            return encodedToken;
         }
     }
 }
