@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DevIO.Api.Controllers.Base;
 using DevIO.Api.Dtos;
+using DevIO.Api.Extensions.Authorization;
 using DevIO.Business.Interfaces.Notifications;
 using DevIO.Business.Interfaces.Services;
 using DevIO.Business.Models;
@@ -25,7 +26,6 @@ namespace DevIO.Api.Controllers
             _mapper = mapper;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public async Task<IEnumerable<FornecedorDto>> GetAllAsync()
         {
@@ -42,6 +42,7 @@ namespace DevIO.Api.Controllers
             return fornecedorDto;
         }
 
+        [ClaimsAuthorize("Fornecedor", "Create")]
         [HttpPost]
         public async Task<ActionResult<FornecedorDto>> CreateAsync(FornecedorDto fornecedorDto)
         {
@@ -52,6 +53,7 @@ namespace DevIO.Api.Controllers
             return CustomResponse(fornecedorDto);
         }
 
+        [ClaimsAuthorize("Fornecedor", "Update")]
         [HttpPut("{id:guid}")]
         public async Task<ActionResult<FornecedorDto>> UpdateAsync(Guid id, FornecedorDto fornecedorDto)
         {
@@ -68,6 +70,7 @@ namespace DevIO.Api.Controllers
             return CustomResponse(fornecedorDto);
         }
 
+        [ClaimsAuthorize("Fornecedor", "Delete")]
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<Fornecedor>> DeleteAsync(Guid id)
         {

@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
 using DevIO.Api.Controllers.Base;
 using DevIO.Api.Dtos;
+using DevIO.Api.Extensions.Authorization;
 using DevIO.Business.Interfaces.Notifications;
 using DevIO.Business.Interfaces.Services;
 using DevIO.Business.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevIO.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class EnderecosController : MainController
     {
@@ -35,6 +38,7 @@ namespace DevIO.Api.Controllers
             return _mapper.Map<EnderecoDto>(await _enderecoService.GetByIdAsync(id));
         }
 
+        [ClaimsAuthorize("Fornecedor", "Update")]
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateAsync(Guid id, EnderecoDto enderecoDto)
         {
