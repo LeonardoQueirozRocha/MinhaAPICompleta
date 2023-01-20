@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DevIO.Api.Controllers.Base;
 using DevIO.Api.Dtos;
+using DevIO.Api.Extensions.Authorization;
 using DevIO.Business.Interfaces.Notifications;
 using DevIO.Business.Interfaces.Services;
 using DevIO.Business.Models;
@@ -42,6 +43,7 @@ namespace DevIO.Api.Controllers
             return produtoDto;
         }
 
+        [ClaimsAuthorize("Produto", "Create")]
         [HttpPost]
         public async Task<ActionResult<ProdutoDto>> CreateAsync(ProdutoDto produtoDto)
         {
@@ -58,6 +60,7 @@ namespace DevIO.Api.Controllers
             return CustomResponse(produtoDto);
         }
 
+        [ClaimsAuthorize("Produto", "Create")]
         [HttpPost("streaming")]
         public async Task<ActionResult<ProdutoDto>> CreateStreamingAsync(ProdutoImagemDto produtoDto)
         {
@@ -73,6 +76,7 @@ namespace DevIO.Api.Controllers
             return CustomResponse(produtoDto);
         }
 
+        [ClaimsAuthorize("Produto", "Update")]
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateAsync(Guid id, ProdutoDto produtoDto)
         {
@@ -106,6 +110,7 @@ namespace DevIO.Api.Controllers
             return CustomResponse(produtoDto);
         }
 
+        [ClaimsAuthorize("Produto", "Delete")]
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<ProdutoDto>> DeleteAsync(Guid id)
         {
