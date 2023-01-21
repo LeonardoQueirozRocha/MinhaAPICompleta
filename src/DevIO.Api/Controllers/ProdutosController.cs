@@ -4,6 +4,7 @@ using DevIO.Api.Dtos;
 using DevIO.Api.Extensions.Authorization;
 using DevIO.Business.Interfaces.Notifications;
 using DevIO.Business.Interfaces.Services;
+using DevIO.Business.Interfaces.User;
 using DevIO.Business.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +21,8 @@ namespace DevIO.Api.Controllers
             IProdutoService produtoService,
             IFileService fileService,
             IMapper mapper,
-            INotifier notifier) : base(notifier)
+            INotifier notifier,
+            IUser appUser) : base(notifier, appUser)
         {
             _produtoService = produtoService;
             _fileService = fileService;
