@@ -28,6 +28,7 @@ namespace DevIO.Api.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IEnumerable<FornecedorDto>> GetAllAsync()
         {
