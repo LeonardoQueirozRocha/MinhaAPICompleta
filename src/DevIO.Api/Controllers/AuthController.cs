@@ -3,6 +3,7 @@ using DevIO.Api.Dtos;
 using DevIO.Api.Extensions;
 using DevIO.Business.Interfaces.Notifications;
 using DevIO.Business.Interfaces.User;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
