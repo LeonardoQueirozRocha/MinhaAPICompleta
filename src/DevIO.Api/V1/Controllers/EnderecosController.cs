@@ -13,7 +13,7 @@ namespace DevIO.Api.V1.Controllers
 {
     [Authorize]
     [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/v{version:apiVersion}/enderecos")]
     public class EnderecosController : MainController
     {
         private readonly IEnderecoService _enderecoService;
