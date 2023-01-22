@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using DevIO.Api.Controllers.Base;
+using DevIO.Api.Controllers;
 using DevIO.Api.Dtos;
 using DevIO.Api.Extensions.Authorization;
 using DevIO.Business.Interfaces.Notifications;
@@ -9,18 +9,19 @@ using DevIO.Business.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DevIO.Api.Controllers
+namespace DevIO.Api.V1.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class EnderecosController : MainController
     {
         private readonly IEnderecoService _enderecoService;
         private readonly IMapper _mapper;
 
         public EnderecosController(
-            IEnderecoService enderecoService, 
-            IMapper mapper, 
+            IEnderecoService enderecoService,
+            IMapper mapper,
             INotifier notifier,
             IUser appUser) : base(notifier, appUser)
         {
