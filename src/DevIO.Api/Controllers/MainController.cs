@@ -4,7 +4,7 @@ using DevIO.Business.Notifications;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace DevIO.Api.Controllers.Base
+namespace DevIO.Api.Controllers
 {
     [ApiController]
     public abstract class MainController : ControllerBase
@@ -23,7 +23,7 @@ namespace DevIO.Api.Controllers.Base
             if (appUser.IsAuthenticated())
             {
                 UserId = appUser.GetUserId();
-                AuthenticatedUser= true;
+                AuthenticatedUser = true;
             }
         }
 

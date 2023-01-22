@@ -1,16 +1,19 @@
 ﻿using AutoMapper;
-using DevIO.Api.Controllers.Base;
+using DevIO.Api.Controllers;
 using DevIO.Api.Dtos;
 using DevIO.Api.Extensions.Authorization;
 using DevIO.Business.Interfaces.Notifications;
 using DevIO.Business.Interfaces.Services;
 using DevIO.Business.Interfaces.User;
 using DevIO.Business.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DevIO.Api.Controllers
+namespace DevIO.Api.V1.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class ProdutosController : MainController
     {
         private readonly IProdutoService _produtoService;

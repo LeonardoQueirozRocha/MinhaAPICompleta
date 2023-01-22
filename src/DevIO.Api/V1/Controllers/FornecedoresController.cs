@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using DevIO.Api.Controllers.Base;
+using DevIO.Api.Controllers;
 using DevIO.Api.Dtos;
 using DevIO.Api.Extensions.Authorization;
 using DevIO.Business.Interfaces.Notifications;
@@ -9,10 +9,11 @@ using DevIO.Business.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DevIO.Api.Controllers
+namespace DevIO.Api.V1.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class FornecedoresController : MainController
     {
         private readonly IFornecedorService _fornecedorService;
@@ -48,7 +49,7 @@ namespace DevIO.Api.Controllers
         [ClaimsAuthorize("Fornecedor", "Create")]
         [HttpPost]
         public async Task<ActionResult<FornecedorDto>> CreateAsync(FornecedorDto fornecedorDto)
-        {            
+        {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             await _fornecedorService.AddAsync(_mapper.Map<Fornecedor>(fornecedorDto));
