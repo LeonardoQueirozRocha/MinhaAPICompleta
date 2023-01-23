@@ -1,4 +1,5 @@
 using DevIO.Api.Configurations;
+using DevIO.Api.Extensions;
 using DevIO.Data.Context;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,8 @@ builder.Services.AddApiConfig();
 
 builder.Services.AddSwaggerConfig();
 
+builder.Services.AddLoggingConfig();
+
 builder.Services.AddDependencies();
 
 var app = builder.Build();
@@ -24,6 +27,8 @@ var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>()
 app.UseApiConfig(app.Environment);
 
 app.UseSwaggerConfig(provider);
+
+app.UseLoggingConfig();
 
 app.MapControllers();
 
