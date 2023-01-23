@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevIO.Api.Extensions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DevIO.Api.Configurations
 {
@@ -55,6 +56,7 @@ namespace DevIO.Api.Configurations
                 app.UseHsts();
             }
 
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
