@@ -1,5 +1,4 @@
 using DevIO.Api.Configurations;
-using DevIO.Api.Extensions;
 using DevIO.Data.Context;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +16,7 @@ builder.Services.AddApiConfig();
 
 builder.Services.AddSwaggerConfig();
 
-builder.Services.AddLoggingConfig();
+builder.Services.AddLoggingConfig(builder.Configuration);
 
 builder.Services.AddDependencies();
 
@@ -29,7 +28,5 @@ app.UseApiConfig(app.Environment);
 app.UseSwaggerConfig(provider);
 
 app.UseLoggingConfig();
-
-app.MapControllers();
 
 app.Run();
