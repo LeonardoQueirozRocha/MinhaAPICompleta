@@ -26,6 +26,7 @@ namespace DevIO.Api.Configurations
             services.AddScoped<IEnderecoService, EnderecoService>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IProdutoService, ProdutoService>();
+            services.AddScoped<IAuthService, AuthService>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IUser, AspNetUser>();

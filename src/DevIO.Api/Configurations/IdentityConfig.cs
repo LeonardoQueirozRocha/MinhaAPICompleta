@@ -1,5 +1,6 @@
 ﻿using DevIO.Api.Data;
 using DevIO.Api.Extensions;
+using DevIO.Business.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
