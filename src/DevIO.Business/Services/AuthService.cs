@@ -7,7 +7,6 @@ using DevIO.Business.Interfaces.Services;
 using DevIO.Business.Models.Auth;
 using DevIO.Business.Services.Base;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DevIO.Business.Services;
@@ -16,17 +15,17 @@ public class AuthService : BaseService, IAuthService
 {
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly UserManager<IdentityUser> _userManager;
-    private readonly AppSettings _appSettings;
+    private readonly AuthConfiguration _authConfiguration;
 
     public AuthService(
         INotifier notifier,
         SignInManager<IdentityUser> signInManager,
         UserManager<IdentityUser> userManager,
-        IOptions<AppSettings> appSettings) : base(notifier)
+        AuthConfiguration authConfiguration) : base(notifier)
     {
         _signInManager = signInManager;
         _userManager = userManager;
-        _appSettings = appSettings.Value;
+        _authConfiguration = authConfiguration;
     }
 
     public async Task<UserLogin> CreateAsync(string email, string password)
@@ -96,13 +95,13 @@ public class AuthService : BaseService, IAuthService
         identityClaims.AddClaims(claims);
 
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+        var key = Encoding.ASCII.GetBytes(_authConfiguration.Secret);
         var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
         {
-            Issuer = _appSettings.Issuer,
-            Audience = _appSettings.ValidIn,
+            Issuer = _authConfiguration.Issuer,
+            Audience = _authConfiguration.ValidIn,
             Subject = identityClaims,
-            Expires = DateTime.UtcNow.AddHours(_appSettings.ExpirationHours),
+            Expires = DateTime.UtcNow.AddHours(_authConfiguration.ExpirationHours),
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(key),
                 SecurityAlgorithms.HmacSha256Signature)
@@ -112,7 +111,7 @@ public class AuthService : BaseService, IAuthService
         var response = new UserLogin
         {
             AccessToken = encodedToken,
-            ExpiresIn = TimeSpan.FromHours(_appSettings.ExpirationHours).TotalSeconds,
+            ExpiresIn = TimeSpan.FromHours(_authConfiguration.ExpirationHours).TotalSeconds,
             UserToken = new UserToken
             {
                 Id = user.Id,
