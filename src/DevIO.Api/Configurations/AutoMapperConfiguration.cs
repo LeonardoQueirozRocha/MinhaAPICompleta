@@ -5,9 +5,9 @@ using DevIO.Business.Models.Auth;
 
 namespace DevIO.Api.Configurations;
 
-public class AutoMapperConfig : Profile
+public class AutoMapperConfiguration : Profile
 {
-    public AutoMapperConfig()
+    public AutoMapperConfiguration()
     {
         CreateMap<Fornecedor, FornecedorDto>().ReverseMap();
         CreateMap<Endereco, EnderecoDto>().ReverseMap();

@@ -3,4 +3,5 @@
 public class AppSettings
 {
     public AuthConfiguration AuthConfiguration { get; set; }
+    public LogConfiguration LogConfiguration { get; set; }
 }
