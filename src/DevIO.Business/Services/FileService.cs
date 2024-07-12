@@ -1,66 +1,73 @@
-﻿using DevIO.Business.Interfaces.Notifications;
+﻿using DevIO.Business.Configurations;
+using DevIO.Business.Interfaces.Notifications;
 using DevIO.Business.Interfaces.Services;
 using DevIO.Business.Services.Base;
 using Microsoft.AspNetCore.Http;
 
-namespace DevIO.Business.Services
+namespace DevIO.Business.Services;
+
+public class FileService : BaseService, IFileService
 {
-    public class FileService : BaseService, IFileService
+    private readonly ValidationMessages _validationMessages;
+
+    public FileService(
+        INotifier notifier,
+        ValidationMessages validationMessages) : base(notifier)
     {
-        public FileService(INotifier notifier) : base(notifier) { }
+        _validationMessages = validationMessages;
+    }
 
-        public async Task<bool> UploadAsync(string file, string fileName)
+    public async Task<bool> UploadAsync(string file, string fileName)
+    {
+        if (string.IsNullOrEmpty(file))
         {
-            if (string.IsNullOrEmpty(file))
-            {
-                Notify("Forneça uma imagem para este produto!");
-                return false;
-            }
-
-            var path = GetFilePath(fileName);
-
-            if (File.Exists(path))
-            {
-                Notify("Já existe uma arquivo com este nome!");
-                return false;
-            }
-
-            var bytes = Convert.FromBase64String(file);
-            await File.WriteAllBytesAsync(path, bytes);
-
-            return true;
+            Notify(_validationMessages.EmptyFileMessage);
+            return false;
         }
 
-        public async Task<bool> UploadStreamingAsync(IFormFile file, string filePrefix)
+        var path = GetFilePath(fileName);
+
+        if (File.Exists(path))
         {
-            if (file == null || file.Length == 0)
-            {
-                Notify("Forneça uma imagem para este produto!");
-                return false;
-            }
-
-            var path = GetFilePath(filePrefix + file.FileName);
-
-            if (File.Exists(path))
-            {
-                Notify("Já existe uma arquivo com este nome!");
-                return false;
-            }
-
-            using var stream = new FileStream(path, FileMode.Create);
-            await file.CopyToAsync(stream);
-
-            return true;
+            Notify(_validationMessages.FileAlreadyExistMessage);
+            return false;
         }
 
-        public void Delete(string fileName)
+        var bytes = Convert.FromBase64String(file);
+        await File.WriteAllBytesAsync(path, bytes);
+
+        return true;
+    }
+
+    public async Task<bool> UploadStreamingAsync(IFormFile file, string filePrefix)
+    {
+        if (file == null || file.Length == 0)
         {
-            File.Delete(GetFilePath(fileName));
+            Notify(_validationMessages.EmptyFileMessage);
+            return false;
         }
 
-        private string GetFilePath(string fileName)
+        var path = GetFilePath(filePrefix + file.FileName);
+
+        if (File.Exists(path))
         {
-            return Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/app/demo-webapi/src/assets", fileName);
+            Notify(_validationMessages.FileAlreadyExistMessage);
+            return false;
         }
+
+        using var stream = new FileStream(path, FileMode.Create);
+        await file.CopyToAsync(stream);
+
+        return true;
+    }
+
+    public void Delete(string fileName)
+    {
+        File.Delete(GetFilePath(fileName));
+    }
+
+    private string GetFilePath(string fileName)
+    {
+        return Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/app/demo-webapi/src/assets", fileName);
     }
 }

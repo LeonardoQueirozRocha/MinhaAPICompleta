@@ -15,7 +15,8 @@ public static class AppSettingsConfiguration
         services
             .AddConfiguration<AppSettings>(configuration)
             .AddConfiguration<AuthConfiguration>(configuration, nameof(AuthConfiguration))
-            .AddConfiguration<LogConfiguration>(configuration, nameof(LogConfiguration));
+            .AddConfiguration<LogConfiguration>(configuration, nameof(LogConfiguration))
+            .AddConfiguration<ValidationMessages>(configuration, nameof(ValidationMessages));
 
         using var provider = services.BuildServiceProvider();
         return provider.GetRequiredService<AppSettings>();
