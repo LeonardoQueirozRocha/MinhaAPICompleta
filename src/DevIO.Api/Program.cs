@@ -10,25 +10,25 @@ var appSettings = builder.Services.AddAppSettingsConfiguration(builder.Configura
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentityConfig(builder.Configuration, appSettings.AuthConfiguration);
+builder.Services.AddIdentityConfiguration(builder.Configuration, appSettings.AuthConfiguration);
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.AddApiConfig();
+builder.Services.AddApiConfiguration();
 
-builder.Services.AddSwaggerConfig();
+builder.Services.AddSwaggerConfiguration();
 
-builder.Services.AddLoggingConfig(builder.Configuration);
+builder.Services.AddLoggingConfiguration(builder.Configuration, appSettings.LogConfiguration);
 
-builder.Services.AddDependencies();
+builder.Services.AddDependencyInjectionConfiguration();
 
 var app = builder.Build();
 var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
-app.UseApiConfig(app.Environment);
+app.UseApiConfiguration(app.Environment);
 
-app.UseSwaggerConfig(provider);
+app.UseSwaggerConfiguration(provider);
 
-app.UseLoggingConfig();
+app.UseLoggingConfiguration();
 
 app.Run();

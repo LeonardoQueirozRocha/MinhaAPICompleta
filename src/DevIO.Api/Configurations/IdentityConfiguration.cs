@@ -11,7 +11,7 @@ namespace DevIO.Api.Configurations;
 
 public static class IdentityConfiguration
 {
-    public static IServiceCollection AddIdentityConfig(
+    public static IServiceCollection AddIdentityConfiguration(
         this IServiceCollection services,
         IConfiguration configuration,
         AuthConfiguration authConfiguration)
