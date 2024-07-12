@@ -15,17 +15,17 @@ public class AuthService : BaseService, IAuthService
 {
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly UserManager<IdentityUser> _userManager;
-    private readonly AuthConfiguration _authConfiguration;
+    private readonly AppSettings _appSettings;
 
     public AuthService(
         INotifier notifier,
         SignInManager<IdentityUser> signInManager,
         UserManager<IdentityUser> userManager,
-        AuthConfiguration authConfiguration) : base(notifier)
+        AppSettings appSettings) : base(notifier)
     {
         _signInManager = signInManager;
         _userManager = userManager;
-        _authConfiguration = authConfiguration;
+        _appSettings = appSettings;
     }
 
     public async Task<UserLogin> CreateAsync(string email, string password)
@@ -63,11 +63,11 @@ public class AuthService : BaseService, IAuthService
 
         if (result.IsLockedOut)
         {
-            Notify("Usuário temporariamente bloqueado por tentativas inválidas");
+            Notify(_appSettings.ValidationMessages.LockedOutMessage);
             return null;
         }
 
-        Notify("Usuário ou Senha incorretos");
+        Notify(_appSettings.ValidationMessages.IncorrectUserOrPasswordMessage);
         return null;
     }
 
@@ -95,13 +95,13 @@ public class AuthService : BaseService, IAuthService
         identityClaims.AddClaims(claims);
 
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_authConfiguration.Secret);
+        var key = Encoding.ASCII.GetBytes(_appSettings.AuthConfiguration.Secret);
         var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
         {
-            Issuer = _authConfiguration.Issuer,
-            Audience = _authConfiguration.ValidIn,
+            Issuer = _appSettings.AuthConfiguration.Issuer,
+            Audience = _appSettings.AuthConfiguration.ValidIn,
             Subject = identityClaims,
-            Expires = DateTime.UtcNow.AddHours(_authConfiguration.ExpirationHours),
+            Expires = DateTime.UtcNow.AddHours(_appSettings.AuthConfiguration.ExpirationHours),
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(key),
                 SecurityAlgorithms.HmacSha256Signature)
@@ -111,7 +111,7 @@ public class AuthService : BaseService, IAuthService
         var response = new UserLogin
         {
             AccessToken = encodedToken,
-            ExpiresIn = TimeSpan.FromHours(_authConfiguration.ExpirationHours).TotalSeconds,
+            ExpiresIn = TimeSpan.FromHours(_appSettings.AuthConfiguration.ExpirationHours).TotalSeconds,
             UserToken = new UserToken
             {
                 Id = user.Id,
