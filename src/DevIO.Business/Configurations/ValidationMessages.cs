@@ -8,4 +8,6 @@ public class ValidationMessages
     public string FileAlreadyExistMessage { get; set; }
     public string SupplierAlreadyExist { get; set; }
     public string SupplierHasRegisteredProducts { get; set; }
+    public string SupplierNotFound { get; set; }
+    public string QueryError { get; set; }
 }
