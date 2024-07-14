@@ -56,7 +56,10 @@ public class ProdutosController : MainController
 
         var imageName = $"{Guid.NewGuid()}_{produtoDto.Imagem}";
 
-        if (!await _fileService.UploadAsync(produtoDto.ImagemUpload, imageName)) return CustomResponse(produtoDto);
+        if (!await _fileService.UploadAsync(produtoDto.ImagemUpload, imageName))
+        {
+            return CustomResponse(produtoDto);
+        }
 
         produtoDto.Imagem = imageName;
 
@@ -73,7 +76,10 @@ public class ProdutosController : MainController
 
         var imgPrefix = $"{Guid.NewGuid()}_";
 
-        if (!await _fileService.UploadStreamingAsync(produtoDto.ImagemUpload, imgPrefix)) return CustomResponse(produtoDto);
+        if (!await _fileService.UploadStreamingAsync(produtoDto.ImagemUpload, imgPrefix))
+        {
+            return CustomResponse(produtoDto);
+        }
 
         produtoDto.Imagem = imgPrefix + produtoDto.ImagemUpload.FileName;
         await _produtoService.AddAsync(_mapper.Map<Produto>(produtoDto));

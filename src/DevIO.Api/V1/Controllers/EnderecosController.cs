@@ -2,6 +2,7 @@
 using DevIO.Api.Controllers;
 using DevIO.Api.Dtos;
 using DevIO.Api.Extensions.Authorization;
+using DevIO.Business.Configurations;
 using DevIO.Business.Interfaces.Notifications;
 using DevIO.Business.Interfaces.Services;
 using DevIO.Business.Interfaces.User;
@@ -18,15 +19,18 @@ public class EnderecosController : MainController
 {
     private readonly IEnderecoService _enderecoService;
     private readonly IMapper _mapper;
+    private readonly ValidationMessages _validationMessages;
 
     public EnderecosController(
         IEnderecoService enderecoService,
         IMapper mapper,
         INotifier notifier,
-        IUser appUser) : base(notifier, appUser)
+        IUser appUser,
+        ValidationMessages validationMessages) : base(notifier, appUser)
     {
         _enderecoService = enderecoService;
         _mapper = mapper;
+        _validationMessages = validationMessages;
     }
 
     [HttpGet]
@@ -47,7 +51,7 @@ public class EnderecosController : MainController
     {
         if (id != enderecoDto.Id)
         {
-            ReportError("O id informado não é o mesmo que foi passado na query");
+            ReportError(_validationMessages.QueryError);
             return CustomResponse(enderecoDto);
         }
 

@@ -45,7 +45,9 @@ public class FornecedorService : BaseService, IFornecedorService
         if (!Validate(new FornecedorValidator(), fornecedor) ||
             !Validate(new EnderecoValidator(), fornecedor.Endereco)) return false;
 
-        if (_fornecedorRepository.SearchAsync(f => f.Documento == fornecedor.Documento).Result.Any())
+        var fornecedores = await _fornecedorRepository.SearchAsync(f => f.Documento == fornecedor.Documento);
+
+        if (fornecedores.Any())
         {
             Notify(_validationMessages.SupplierAlreadyExist);
             return false;
@@ -60,7 +62,15 @@ public class FornecedorService : BaseService, IFornecedorService
     {
         if (!Validate(new FornecedorValidator(), fornecedor)) return false;
 
-        if (_fornecedorRepository.SearchAsync(f => f.Documento == fornecedor.Documento && f.Id != fornecedor.Id).Result.Any())
+        var fornecedorDb = await _fornecedorRepository.GetByIdAsync(fornecedor.Id);
+
+        if (fornecedorDb is null)
+        {
+            Notify(_validationMessages.SupplierNotFound);
+            return false;
+        }
+
+        if (fornecedorDb.Documento.Equals(fornecedor.Documento))
         {
             Notify(_validationMessages.SupplierAlreadyExist);
             return false;
@@ -81,7 +91,10 @@ public class FornecedorService : BaseService, IFornecedorService
 
         var endereco = await _enderecoRepository.GetEnderecoByFornecedorAsync(id);
 
-        if (endereco != null) await _enderecoRepository.DeleteAsync(endereco.Id);
+        if (endereco != null)
+        {
+            await _enderecoRepository.DeleteAsync(endereco.Id);
+        }
 
         await _fornecedorRepository.DeleteAsync(id);
 

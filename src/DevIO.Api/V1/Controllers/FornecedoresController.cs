@@ -2,6 +2,7 @@
 using DevIO.Api.Controllers;
 using DevIO.Api.Dtos;
 using DevIO.Api.Extensions.Authorization;
+using DevIO.Business.Configurations;
 using DevIO.Business.Interfaces.Notifications;
 using DevIO.Business.Interfaces.Services;
 using DevIO.Business.Interfaces.User;
@@ -18,15 +19,18 @@ public class FornecedoresController : MainController
 {
     private readonly IFornecedorService _fornecedorService;
     private readonly IMapper _mapper;
+    private readonly ValidationMessages _validationMessages;
 
     public FornecedoresController(
         IFornecedorService fornecedorService,
         IMapper mapper,
         INotifier notifier,
-        IUser appUser) : base(notifier, appUser)
+        IUser appUser,
+        ValidationMessages validationMessages) : base(notifier, appUser)
     {
         _fornecedorService = fornecedorService;
         _mapper = mapper;
+        _validationMessages = validationMessages;
     }
 
     [AllowAnonymous]
@@ -63,7 +67,7 @@ public class FornecedoresController : MainController
     {
         if (id != fornecedorDto.Id)
         {
-            ReportError("O id informado não é o mesmo que foi passado na query");
+            ReportError(_validationMessages.QueryError);
             return CustomResponse(fornecedorDto);
         }
 
