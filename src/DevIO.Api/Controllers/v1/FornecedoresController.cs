@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using DevIO.Api.Controllers;
+using DevIO.Api.Controllers.Base;
 using DevIO.Api.Dtos;
 using DevIO.Api.Extensions.Authorization;
 using DevIO.Business.Configurations;
@@ -10,7 +10,7 @@ using DevIO.Business.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DevIO.Api.v1.Controllers;
+namespace DevIO.Api.Controllers.v1;
 
 [Authorize]
 [ApiVersion("1.0")]
