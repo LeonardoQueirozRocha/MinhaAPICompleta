@@ -1,9 +1,9 @@
-﻿using DevIO.Api.Controllers;
+﻿using DevIO.Api.Controllers.Base;
 using DevIO.Business.Interfaces.Notifications;
 using DevIO.Business.Interfaces.User;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DevIO.Api.v2.Controllers;
+namespace DevIO.Api.Controllers.v2;
 
 [ApiVersion("2.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
