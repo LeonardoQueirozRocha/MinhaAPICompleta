@@ -96,18 +96,20 @@ public class AuthService : BaseService, IAuthService
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_appSettings.AuthConfiguration.Secret);
-        var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
+        var security = new SecurityTokenDescriptor
         {
             Issuer = _appSettings.AuthConfiguration.Issuer,
             Audience = _appSettings.AuthConfiguration.ValidIn,
             Subject = identityClaims,
             Expires = DateTime.UtcNow.AddHours(_appSettings.AuthConfiguration.ExpirationHours),
             SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(key),
-                SecurityAlgorithms.HmacSha256Signature)
-        });
+                        new SymmetricSecurityKey(key),
+                        SecurityAlgorithms.HmacSha256Signature)
+        };
 
+        var token = tokenHandler.CreateToken(security);
         var encodedToken = tokenHandler.WriteToken(token);
+        
         var response = new UserLogin
         {
             AccessToken = encodedToken,
