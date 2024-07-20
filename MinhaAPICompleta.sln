@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevIO.Data.Tests", "tests\D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevIO.Api.Tests", "tests\DevIO.Api.Tests\DevIO.Api.Tests.csproj", "{1037181C-03B3-4A32-8046-AA13A27F7EE3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevIO.Utils.Tests", "tests\DevIO.Utils.Tests\DevIO.Utils.Tests.csproj", "{18CC6F8F-CCD0-4685-8D97-AC628BAC143F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{1037181C-03B3-4A32-8046-AA13A27F7EE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1037181C-03B3-4A32-8046-AA13A27F7EE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1037181C-03B3-4A32-8046-AA13A27F7EE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18CC6F8F-CCD0-4685-8D97-AC628BAC143F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18CC6F8F-CCD0-4685-8D97-AC628BAC143F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18CC6F8F-CCD0-4685-8D97-AC628BAC143F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18CC6F8F-CCD0-4685-8D97-AC628BAC143F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,5 +64,6 @@ Global
 		{899C5978-132B-4667-AAE6-CAA2CEE96BDD} = {E8BDE209-B40C-42AD-9886-C1C723321ED2}
 		{1D844083-668E-40AB-B9E1-EF6AA32C4E4C} = {E8BDE209-B40C-42AD-9886-C1C723321ED2}
 		{1037181C-03B3-4A32-8046-AA13A27F7EE3} = {E8BDE209-B40C-42AD-9886-C1C723321ED2}
+		{18CC6F8F-CCD0-4685-8D97-AC628BAC143F} = {E8BDE209-B40C-42AD-9886-C1C723321ED2}
 	EndGlobalSection
 EndGlobal

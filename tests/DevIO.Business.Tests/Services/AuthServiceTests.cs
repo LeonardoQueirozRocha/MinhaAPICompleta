@@ -1,7 +1,7 @@
 using System.Security.Claims;
-using DevIO.Business.Configurations;
 using DevIO.Business.Interfaces.Notifications;
 using DevIO.Business.Services;
+using DevIO.Utils.Tests.Builders.Business.Configurations;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Moq;
@@ -21,7 +21,7 @@ public class AuthServiceTests
     public AuthServiceTests()
     {
         var mocker = new AutoMocker();
-        mocker.Use(BuildAppSettings());
+        mocker.Use(AppSettingsBuilder.Build());
         _authService = mocker.CreateInstance<AuthService>();
         _signInManager = mocker.GetMock<SignInManager<IdentityUser>>();
         _userManager = mocker.GetMock<UserManager<IdentityUser>>();
@@ -88,38 +88,5 @@ public class AuthServiceTests
             .Select(x => x.Value)
             .Should()
             .Contain(claims.Select(x => x.Value));
-    }
-
-    private static AppSettings BuildAppSettings()
-    {
-        var appSettings = new AppSettings
-        {
-            AuthConfiguration = new AuthConfiguration
-            {
-                ExpirationHours = 2,
-                Issuer = "https://localhost",
-                Secret = "MEUSEGREDOSUPERSECRETO",
-                ValidIn = "MeuSistema"
-            },
-            LogConfiguration = new LogConfiguration
-            {
-                ApiKey = Guid.NewGuid().ToString(),
-                LogId = Guid.NewGuid(),
-                HeartbeatId = Guid.NewGuid().ToString()
-            },
-            ValidationMessages = new ValidationMessages
-            {
-                EmptyFileMessage = "EmptyFileMessage",
-                FileAlreadyExistMessage = "FileAlreadyExistMessage",
-                IncorrectUserOrPasswordMessage = "IncorrectUserOrPasswordMessage",
-                LockedOutMessage = "LockedOutMessage",
-                QueryError = "QueryError",
-                SupplierAlreadyExist = "SupplierAlreadyExist",
-                SupplierHasRegisteredProducts = "SupplierHasRegisteredProducts",
-                SupplierNotFound = "SupplierNotFound",
-            }
-        };
-
-        return appSettings;
     }
 }

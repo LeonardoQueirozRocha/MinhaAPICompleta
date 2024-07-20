@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\DevIO.Business\DevIO.Business.csproj" />
+    <ProjectReference Include="..\DevIO.Utils.Tests\DevIO.Utils.Tests.csproj" />
   </ItemGroup>
 
 </Project>
