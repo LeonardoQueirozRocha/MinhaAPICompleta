@@ -8,30 +8,9 @@ public static class AppSettingsBuilder
     {
         var appSettings = new AppSettings
         {
-            AuthConfiguration = new AuthConfiguration
-            {
-                ExpirationHours = 2,
-                Issuer = "https://localhost",
-                Secret = "MEUSEGREDOSUPERSECRETO",
-                ValidIn = "MeuSistema"
-            },
-            LogConfiguration = new LogConfiguration
-            {
-                ApiKey = Guid.NewGuid().ToString(),
-                LogId = Guid.NewGuid(),
-                HeartbeatId = Guid.NewGuid().ToString()
-            },
-            ValidationMessages = new ValidationMessages
-            {
-                EmptyFileMessage = "EmptyFileMessage",
-                FileAlreadyExistMessage = "FileAlreadyExistMessage",
-                IncorrectUserOrPasswordMessage = "IncorrectUserOrPasswordMessage",
-                LockedOutMessage = "LockedOutMessage",
-                QueryError = "QueryError",
-                SupplierAlreadyExist = "SupplierAlreadyExist",
-                SupplierHasRegisteredProducts = "SupplierHasRegisteredProducts",
-                SupplierNotFound = "SupplierNotFound",
-            }
+            AuthConfiguration = AuthConfigurationBuilder.Build(),
+            LogConfiguration = LogConfigurationBuilder.Build(),
+            ValidationMessages = ValidationMessagesBuilder.Build(),
         };
 
         return appSettings;
