@@ -28,7 +28,6 @@ public class AuthServiceTests
         _notifier = mocker.GetMock<INotifier>();
     }
 
-
     [Fact(DisplayName = $"{ClassName} CreateAsync Should Generate Jwt Successfully")]
     public async Task CreateAsync_ShouldGenerateJwtSuccessfully()
     {
