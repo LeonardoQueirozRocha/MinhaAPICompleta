@@ -4,6 +4,10 @@
     <ProjectReference Include="..\..\src\DevIO.Business\DevIO.Business.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Bogus" Version="35.6.0" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

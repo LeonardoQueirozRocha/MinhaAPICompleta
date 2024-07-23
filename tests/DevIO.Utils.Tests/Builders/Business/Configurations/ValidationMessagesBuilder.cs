@@ -1,23 +1,23 @@
+using Bogus;
 using DevIO.Business.Configurations;
+using DevIO.Utils.Tests.Builders.Base;
 
 namespace DevIO.Utils.Tests.Builders.Business.Configurations;
 
-public static class ValidationMessagesBuilder
+public class ValidationMessagesBuilder : LazyFakerBuilder<ValidationMessages>
 {
-    public static ValidationMessages Build()
-    {
-        var validationMessages = new ValidationMessages
-        {
-            EmptyFileMessage = "EmptyFileMessage",
-            FileAlreadyExistMessage = "FileAlreadyExistMessage",
-            IncorrectUserOrPasswordMessage = "IncorrectUserOrPasswordMessage",
-            LockedOutMessage = "LockedOutMessage",
-            QueryError = "QueryError",
-            SupplierAlreadyExist = "SupplierAlreadyExist",
-            SupplierHasRegisteredProducts = "SupplierHasRegisteredProducts",
-            SupplierNotFound = "SupplierNotFound",
-        };
+    private ValidationMessagesBuilder() { }
 
-        return validationMessages;
-    }
+    public static ValidationMessagesBuilder Instance => new();
+
+    protected override Faker<ValidationMessages> Factory() => 
+        new Faker<ValidationMessages>(Locale)
+            .RuleFor(op => op.EmptyFileMessage, setter => setter.Random.Word())
+            .RuleFor(op => op.FileAlreadyExistMessage, setter => setter.Random.Word())
+            .RuleFor(op => op.IncorrectUserOrPasswordMessage, setter => setter.Random.Word())
+            .RuleFor(op => op.LockedOutMessage, setter => setter.Random.Word())
+            .RuleFor(op => op.QueryError, setter => setter.Random.Word())
+            .RuleFor(op => op.SupplierAlreadyExist, setter => setter.Random.Word())
+            .RuleFor(op => op.SupplierHasRegisteredProducts, setter => setter.Random.Word())
+            .RuleFor(op => op.SupplierNotFound, setter => setter.Random.Word());
 }

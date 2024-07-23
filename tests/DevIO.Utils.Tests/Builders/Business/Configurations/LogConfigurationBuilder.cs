@@ -1,18 +1,18 @@
+using Bogus;
 using DevIO.Business.Configurations;
+using DevIO.Utils.Tests.Builders.Base;
 
 namespace DevIO.Utils.Tests.Builders.Business.Configurations;
 
-public static class LogConfigurationBuilder
+public class LogConfigurationBuilder : LazyFakerBuilder<LogConfiguration>
 {
-    public static LogConfiguration Build()
-    {
-        var logConfiguration = new LogConfiguration
-        {
-            ApiKey = Guid.NewGuid().ToString(),
-            LogId = Guid.NewGuid(),
-            HeartbeatId = Guid.NewGuid().ToString()
-        };
+    private LogConfigurationBuilder() { }
 
-        return logConfiguration;
-    }
+    public static LogConfigurationBuilder Instance => new();
+
+    protected override Faker<LogConfiguration> Factory() =>
+        new Faker<LogConfiguration>(Locale)
+            .RuleFor(op => op.ApiKey, _ => Guid.NewGuid().ToString())
+            .RuleFor(op => op.LogId, _ => Guid.NewGuid())
+            .RuleFor(op => op.HeartbeatId, _ => Guid.NewGuid().ToString());
 }

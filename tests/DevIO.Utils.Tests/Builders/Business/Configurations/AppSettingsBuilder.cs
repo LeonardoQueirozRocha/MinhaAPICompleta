@@ -1,18 +1,18 @@
+using Bogus;
 using DevIO.Business.Configurations;
+using DevIO.Utils.Tests.Builders.Base;
 
 namespace DevIO.Utils.Tests.Builders.Business.Configurations;
 
-public static class AppSettingsBuilder
+public class AppSettingsBuilder : LazyFakerBuilder<AppSettings>
 {
-    public static AppSettings Build()
-    {
-        var appSettings = new AppSettings
-        {
-            AuthConfiguration = AuthConfigurationBuilder.Build(),
-            LogConfiguration = LogConfigurationBuilder.Build(),
-            ValidationMessages = ValidationMessagesBuilder.Build(),
-        };
+    private AppSettingsBuilder() { }
 
-        return appSettings;
-    }
+    public static AppSettingsBuilder Instance => new();
+
+    protected override Faker<AppSettings> Factory() =>
+        new Faker<AppSettings>(Locale)
+            .RuleFor(op => op.AuthConfiguration, _ => AuthConfigurationBuilder.Instance.Build())
+            .RuleFor(op => op.LogConfiguration, _ => LogConfigurationBuilder.Instance.Build())
+            .RuleFor(op => op.ValidationMessages, _ => ValidationMessagesBuilder.Instance.Build());
 }

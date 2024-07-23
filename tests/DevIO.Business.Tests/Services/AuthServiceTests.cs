@@ -21,7 +21,7 @@ public class AuthServiceTests
     public AuthServiceTests()
     {
         var mocker = new AutoMocker();
-        mocker.Use(AppSettingsBuilder.Build());
+        mocker.Use(AppSettingsBuilder.Instance.Build());
         _authService = mocker.CreateInstance<AuthService>();
         _signInManager = mocker.GetMock<SignInManager<IdentityUser>>();
         _userManager = mocker.GetMock<UserManager<IdentityUser>>();
@@ -59,6 +59,7 @@ public class AuthServiceTests
         _ = _userManager
                 .Setup(service => service.GetRolesAsync(It.IsAny<IdentityUser>()))
                 .ReturnsAsync(userRoles);
+                
         // Act
         var result = await _authService.CreateAsync(email, password);
 
