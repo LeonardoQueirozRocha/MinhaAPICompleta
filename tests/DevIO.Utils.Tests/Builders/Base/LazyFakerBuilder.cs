@@ -2,7 +2,7 @@ using Bogus;
 
 namespace DevIO.Utils.Tests.Builders.Base;
 
-public abstract class LazyFakerBuilder<TEntity> where TEntity : class, new()
+public abstract class LazyFakerBuilder<TEntity> where TEntity : class
 {
     protected const string Locale = "pt_BR";
     private readonly Lazy<Faker<TEntity>> _lazyFaker;
@@ -12,20 +12,14 @@ public abstract class LazyFakerBuilder<TEntity> where TEntity : class, new()
         _lazyFaker = new Lazy<Faker<TEntity>>(Factory, isThreadSafe: true);
     }
 
-    public virtual TEntity Build()
-    {
-        return Faker.Generate();
-    }
+    public virtual TEntity Build() =>
+        Faker.Generate();
 
-    public ICollection<TEntity> BuildCollection(int? count = null)
-    {
-        count ??= new Faker().Random.Number(5, 15);
-
-        return Enumerable
-            .Range(0, count.Value)
+    public ICollection<TEntity> BuildCollection(int? count = null) => 
+        Enumerable
+            .Range(0, count ?? new Faker().Random.Number(5, 15))
             .Select(_ => Build())
             .ToArray();
-    }
 
     protected Faker<TEntity> Faker => _lazyFaker.Value;
 

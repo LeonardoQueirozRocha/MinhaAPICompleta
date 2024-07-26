@@ -2,6 +2,7 @@ using System.Security.Claims;
 using DevIO.Business.Interfaces.Notifications;
 using DevIO.Business.Services;
 using DevIO.Utils.Tests.Builders.Business.Configurations;
+using DevIO.Utils.Tests.Builders.Business.Models.Auth;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Moq;
@@ -32,15 +33,10 @@ public class AuthServiceTests
     public async Task CreateAsync_ShouldGenerateJwtSuccessfully()
     {
         // Arrange
-        var email = "teste@teste.com";
-        var password = "Teste@123";
-        var identityUser = new IdentityUser
-        {
-            Email = email,
-            Id = Guid.NewGuid().ToString(),
-        };
-        var claims = new List<Claim>() { new("teste", "teste") };
-        var userRoles = new List<string> { "teste" };
+        const string password = "Teste@123";
+        var identityUser = IdentityUserBuilder.Instance.Build();
+        var claims = ClaimBuilder.Instance.BuildCollection().ToList();
+        var userRoles = claims.Select(x => x.Value).ToList();
 
         _ = _userManager
                 .Setup(service => service.CreateAsync(
@@ -59,31 +55,16 @@ public class AuthServiceTests
         _ = _userManager
                 .Setup(service => service.GetRolesAsync(It.IsAny<IdentityUser>()))
                 .ReturnsAsync(userRoles);
-                
+
         // Act
-        var result = await _authService.CreateAsync(email, password);
+        var result = await _authService.CreateAsync(identityUser.Email, password);
 
         // Assert
-        result
-            .Should()
-            .NotBeNull();
-
-        result.UserToken
-            .Should()
-            .NotBeNull();
-
-        result.AccessToken
-            .Should()
-            .NotBeNullOrEmpty();
-
-        result.UserToken.Email
-            .Should()
-            .Be(email);
-
-        result.UserToken.Id
-            .Should()
-            .Be(identityUser.Id);
-
+        result.Should().NotBeNull();
+        result.UserToken.Should().NotBeNull();
+        result.AccessToken.Should().NotBeNullOrEmpty();
+        result.UserToken.Email.Should().Be(identityUser.Email);
+        result.UserToken.Id.Should().Be(identityUser.Id);
         result.UserToken.Claims
             .Select(x => x.Value)
             .Should()
