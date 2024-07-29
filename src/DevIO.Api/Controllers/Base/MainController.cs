@@ -43,20 +43,20 @@ public abstract class MainController : ControllerBase
 
     protected ActionResult CustomResponse(ModelStateDictionary modelState)
     {
-        if (!modelState.IsValid) ReportInvalidModelError(modelState);
+        if (!modelState.IsValid)
+        {
+            ReportInvalidModelError(modelState);
+        }
 
         return CustomResponse();
     }
 
     protected void ReportInvalidModelError(ModelStateDictionary modelState)
     {
-        var errors = modelState.Values.SelectMany(value => value.Errors);
-
-        foreach (var error in errors)
-        {
-            var errorMessage = error.Exception == null ? error.ErrorMessage : error.Exception.Message;
-            ReportError(errorMessage);
-        }
+        modelState.Values
+            .SelectMany(value => value.Errors)
+            .ToList()
+            .ForEach(error => ReportError(error.Exception == null ? error.ErrorMessage : error.Exception.Message));
     }
 
     protected void ReportError(string message)

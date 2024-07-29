@@ -74,6 +74,19 @@ public class AuthService : BaseService, IAuthService
     private async Task<UserLogin> GenerateJwtAsync(string email)
     {
         var user = await _userManager.FindByEmailAsync(email);
+        var claimsIdentity = await GetClaimsIdentityAsync(user);
+        var encodedToken = GetEncodedToken(claimsIdentity);
+        var userLogin = BuildUserLogin(
+            encodedToken,
+            user.Id,
+            user.Email,
+            claimsIdentity.Claims);
+
+        return userLogin;
+    }
+
+    private async Task<ClaimsIdentity> GetClaimsIdentityAsync(IdentityUser user)
+    {
         var claims = await _userManager.GetClaimsAsync(user);
         var userRoles = await _userManager.GetRolesAsync(user);
 
@@ -94,28 +107,23 @@ public class AuthService : BaseService, IAuthService
         var identityClaims = new ClaimsIdentity();
         identityClaims.AddClaims(claims);
 
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_appSettings.AuthConfiguration.Secret);
-        var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
-        {
-            Issuer = _appSettings.AuthConfiguration.Issuer,
-            Audience = _appSettings.AuthConfiguration.ValidIn,
-            Subject = identityClaims,
-            Expires = DateTime.UtcNow.AddHours(_appSettings.AuthConfiguration.ExpirationHours),
-            SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(key),
-                SecurityAlgorithms.HmacSha256Signature)
-        });
+        return identityClaims;
+    }
 
-        var encodedToken = tokenHandler.WriteToken(token);
-        var response = new UserLogin
+    private UserLogin BuildUserLogin(
+        string encodedToken,
+        string userId,
+        string userEmail,
+        IEnumerable<Claim> claims)
+    {
+        var userLogin = new UserLogin
         {
             AccessToken = encodedToken,
             ExpiresIn = TimeSpan.FromHours(_appSettings.AuthConfiguration.ExpirationHours).TotalSeconds,
             UserToken = new UserToken
             {
-                Id = user.Id,
-                Email = user.Email,
+                Id = userId,
+                Email = userEmail,
                 Claims = claims.Select(claim => new UserClaim
                 {
                     Type = claim.Type,
@@ -124,7 +132,28 @@ public class AuthService : BaseService, IAuthService
             }
         };
 
-        return response;
+        return userLogin;
+    }
+
+    private string GetEncodedToken(ClaimsIdentity claimsIdentity)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.ASCII.GetBytes(_appSettings.AuthConfiguration.Secret);
+        var security = new SecurityTokenDescriptor
+        {
+            Issuer = _appSettings.AuthConfiguration.Issuer,
+            Audience = _appSettings.AuthConfiguration.ValidIn,
+            Subject = claimsIdentity,
+            Expires = DateTime.UtcNow.AddHours(_appSettings.AuthConfiguration.ExpirationHours),
+            SigningCredentials = new SigningCredentials(
+                        new SymmetricSecurityKey(key),
+                        SecurityAlgorithms.HmacSha256Signature)
+        };
+
+        var token = tokenHandler.CreateToken(security);
+        var encodedToken = tokenHandler.WriteToken(token);
+
+        return encodedToken;
     }
 
     private static long ToUnixEpochDate(DateTime date) =>

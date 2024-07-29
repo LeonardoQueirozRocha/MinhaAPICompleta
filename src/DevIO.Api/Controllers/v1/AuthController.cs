@@ -35,11 +35,6 @@ public class AuthController : MainController
 
         var token = await _authService.CreateAsync(registerUser.Email, registerUser.Password);
 
-        if (!IsValid())
-        {
-            return CustomResponse(registerUser);
-        }
-
         return CustomResponse(_mapper.Map<LoginResponseDto>(token));
     }
 
@@ -52,11 +47,6 @@ public class AuthController : MainController
         }
 
         var token = await _authService.LoginAsync(loginUser.Email, loginUser.Password);
-
-        if (!IsValid())
-        {
-            return CustomResponse(loginUser);
-        }
 
         return CustomResponse(_mapper.Map<LoginResponseDto>(token));
     }

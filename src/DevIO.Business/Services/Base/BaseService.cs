@@ -4,38 +4,37 @@ using DevIO.Business.Notifications;
 using FluentValidation;
 using FluentValidation.Results;
 
-namespace DevIO.Business.Services.Base
+namespace DevIO.Business.Services.Base;
+
+public abstract class BaseService
 {
-    public abstract class BaseService
+    private readonly INotifier _notifier;
+
+    public BaseService(INotifier notifier)
     {
-        private readonly INotifier _notifier;
+        _notifier = notifier;
+    }
 
-        public BaseService(INotifier notifier)
-        {
-            _notifier = notifier;
-        }
+    protected void Notify(ValidationResult validationResult)
+    {
+        validationResult.Errors.ForEach(error => Notify(error.ErrorMessage));
+    }
 
-        protected void Notify(ValidationResult validationResult)
-        {
-            validationResult.Errors.ForEach(error => Notify(error.ErrorMessage));
-        }
+    protected void Notify(string message)
+    {
+        _notifier.Handle(new Notification(message));
+    }
 
-        protected void Notify(string message)
-        {
-            _notifier.Handle(new Notification(message));
-        }
+    protected bool Validate<TValidator, TEntity>(TValidator validator, TEntity entity)
+        where TValidator : AbstractValidator<TEntity>
+        where TEntity : Entity
+    {
+        var result = validator.Validate(entity);
 
-        protected bool Validate<TValidator, TEntity>(TValidator validator, TEntity entity)
-            where TValidator : AbstractValidator<TEntity>
-            where TEntity : Entity
-        {
-            var result = validator.Validate(entity);
+        if (result.IsValid) return true;
 
-            if (result.IsValid) return true;
+        Notify(result);
 
-            Notify(result);
-
-            return false;
-        }
+        return false;
     }
 }
