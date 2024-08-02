@@ -15,7 +15,7 @@ namespace DevIO.Business.Tests.Services;
 
 public class AuthServiceTests
 {
-    private const string ClassName = nameof(AuthServiceTests);
+    private const string ClassName = nameof(AuthService);
 
     private readonly Mock<SignInManager<IdentityUser>> _signInManager;
     private readonly Mock<UserManager<IdentityUser>> _userManager;
