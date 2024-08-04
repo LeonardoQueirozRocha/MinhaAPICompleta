@@ -5,39 +5,38 @@ using DevIO.Business.Models;
 using DevIO.Business.Models.Validations;
 using DevIO.Business.Services.Base;
 
-namespace DevIO.Business.Services
+namespace DevIO.Business.Services;
+
+public class EnderecoService : BaseService, IEnderecoService
 {
-    public class EnderecoService : BaseService, IEnderecoService
+    private readonly IEnderecoRepository _enderecoRepository;
+
+    public EnderecoService(
+        IEnderecoRepository enderecoRepository, 
+        INotifier notifier) : base(notifier)
     {
-        private readonly IEnderecoRepository _enderecoRepository;
+        _enderecoRepository = enderecoRepository;
+    }
 
-        public EnderecoService(
-            IEnderecoRepository enderecoRepository, 
-            INotifier notifier) : base(notifier)
-        {
-            _enderecoRepository = enderecoRepository;
-        }
+    public async Task<IEnumerable<Endereco>> GetAllAsync()
+    {
+        return await _enderecoRepository.GetAllAsync();
+    }
 
-        public async Task<IEnumerable<Endereco>> GetAllAsync()
-        {
-            return await _enderecoRepository.GetAllAsync();
-        }
+    public async Task<Endereco> GetByIdAsync(Guid id)
+    {
+        return await _enderecoRepository.GetByIdAsync(id);
+    }
 
-        public async Task<Endereco> GetByIdAsync(Guid id)
-        {
-            return await _enderecoRepository.GetByIdAsync(id);
-        }
+    public async Task UpdateAsync(Endereco endereco)
+    {
+        if (!Validate(new EnderecoValidator(), endereco)) return;
 
-        public async Task UpdateAsync(Endereco endereco)
-        {
-            if (!Validate(new EnderecoValidator(), endereco)) return;
+        await _enderecoRepository.UpdateAsync(endereco);
+    }
 
-            await _enderecoRepository.UpdateAsync(endereco);
-        }
-
-        public void Dispose()
-        {
-            _enderecoRepository?.Dispose();
-        }
+    public void Dispose()
+    {
+        _enderecoRepository?.Dispose();
     }
 }
