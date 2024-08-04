@@ -201,5 +201,204 @@ public class EnderecoServiceTests
             Times.Exactly(expectedTimes));
     }
 
+    [Theory(DisplayName = $"{ClassName} UpdateAsync Numero Should notify error message")]
+    [InlineData("", 2)]
+    [InlineData(null, 1)]
+    [InlineData("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat ligula tellus, eget iaculis arcu congue ut. Etiam quis commodo ipsum. Praesent sed metus consectetur, vestibulum felis non, dictum arcu. Nam a nulla ac purus faucibus vulputate. In pharetra ligula non posuere laoreet. Aliquam in commodo eros. Fusce condimentum auctor quam. Sed vitae augue vitae mauris pellentesque interdum. Fusce auctor risus eleifend nisl bibendum iaculis. Pellentesque varius dolor et luctus consectetur. Duis et enim at tellus tempus aliquam eget a dolor. Proin sit amet lacus at augue tincidunt pellentesque nec non elit. Nulla malesuada maximus dui, quis pretium dolor dapibus nec.", 1)]
+    public async Task UpdateAsync_Numero_ShouldNotifyErrorMessage(
+        string invalidNumero,
+        int expectedTimes)
+    {
+        // Arrange
+        var expectedErrorMessages = new List<string>()
+        {
+            "O campo Numero precisa ser fornecido",
+            "O campo Numero precisa ter entre 1 e 50 caracteres"
+        };
+
+        var endereco = EnderecoBuilder.Instance.Build();
+        endereco.Numero = invalidNumero;
+
+        _notifier
+            .Setup(serive => serive.Handle(It.IsAny<Notification>()))
+            .Callback((Notification notificationCb) =>
+            {
+                notificationCb.Should().NotBeNull();
+                expectedErrorMessages.Should().Contain(notificationCb.Message);
+            });
+
+        // Act
+        await _enderecoService.UpdateAsync(endereco);
+
+        // Assert
+        _enderecoRepository.Verify(
+            repository => repository.UpdateAsync(It.IsAny<Endereco>()),
+            Times.Never());
+
+        _notifier.Verify(
+            service => service.Handle(It.IsAny<Notification>()),
+            Times.Exactly(expectedTimes));
+    }
+
+    [Theory(DisplayName = $"{ClassName} UpdateAsync Cep Should notify error message")]
+    [InlineData("", 2)]
+    [InlineData(null, 1)]
+    [InlineData("9999999", 1)]
+    [InlineData("999999999", 1)]
+    public async Task UpdateAsync_Cep_ShouldNotifyErrorMessage(
+        string invalidCep,
+        int expectedTimes)
+    {
+        // Arrange
+        var expectedErrorMessages = new List<string>()
+        {
+            "O campo Cep precisa ser fornecido",
+            "O campo Cep precisa ter 8 caracteres"
+        };
+
+        var endereco = EnderecoBuilder.Instance.Build();
+        endereco.Cep = invalidCep;
+
+        _notifier
+            .Setup(serive => serive.Handle(It.IsAny<Notification>()))
+            .Callback((Notification notificationCb) =>
+            {
+                notificationCb.Should().NotBeNull();
+                expectedErrorMessages.Should().Contain(notificationCb.Message);
+            });
+
+        // Act
+        await _enderecoService.UpdateAsync(endereco);
+
+        // Assert
+        _enderecoRepository.Verify(
+            repository => repository.UpdateAsync(It.IsAny<Endereco>()),
+            Times.Never());
+
+        _notifier.Verify(
+            service => service.Handle(It.IsAny<Notification>()),
+            Times.Exactly(expectedTimes));
+    }
+
+    [Theory(DisplayName = $"{ClassName} UpdateAsync Bairro Should notify error message")]
+    [InlineData("", 2)]
+    [InlineData(null, 1)]
+    [InlineData("L", 1)]
+    [InlineData("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat ligula tellus, eget iaculis arcu congue ut. Etiam quis commodo ipsum. Praesent sed metus consectetur, vestibulum felis non, dictum arcu. Nam a nulla ac purus faucibus vulputate. In pharetra ligula non posuere laoreet. Aliquam in commodo eros. Fusce condimentum auctor quam. Sed vitae augue vitae mauris pellentesque interdum. Fusce auctor risus eleifend nisl bibendum iaculis. Pellentesque varius dolor et luctus consectetur. Duis et enim at tellus tempus aliquam eget a dolor. Proin sit amet lacus at augue tincidunt pellentesque nec non elit. Nulla malesuada maximus dui, quis pretium dolor dapibus nec.", 1)]
+    public async Task UpdateAsync_Bairro_ShouldNotifyErrorMessage(
+        string invalidBairro,
+        int expectedTimes)
+    {
+        // Arrange
+        var expectedErrorMessages = new List<string>()
+        {
+            "O campo Bairro precisa ser fornecido",
+            "O campo Bairro precisa ter entre 2 e 100 caracteres"
+        };
+
+        var endereco = EnderecoBuilder.Instance.Build();
+        endereco.Bairro = invalidBairro;
+
+        _notifier
+            .Setup(serive => serive.Handle(It.IsAny<Notification>()))
+            .Callback((Notification notificationCb) =>
+            {
+                notificationCb.Should().NotBeNull();
+                expectedErrorMessages.Should().Contain(notificationCb.Message);
+            });
+
+        // Act
+        await _enderecoService.UpdateAsync(endereco);
+
+        // Assert
+        _enderecoRepository.Verify(
+            repository => repository.UpdateAsync(It.IsAny<Endereco>()),
+            Times.Never());
+
+        _notifier.Verify(
+            service => service.Handle(It.IsAny<Notification>()),
+            Times.Exactly(expectedTimes));
+    }
+
+    [Theory(DisplayName = $"{ClassName} UpdateAsync Cidade Should notify error message")]
+    [InlineData("", 2)]
+    [InlineData(null, 1)]
+    [InlineData("L", 1)]
+    [InlineData("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat ligula tellus, eget iaculis arcu congue ut. Etiam quis commodo ipsum. Praesent sed metus consectetur, vestibulum felis non, dictum arcu. Nam a nulla ac purus faucibus vulputate. In pharetra ligula non posuere laoreet. Aliquam in commodo eros. Fusce condimentum auctor quam. Sed vitae augue vitae mauris pellentesque interdum. Fusce auctor risus eleifend nisl bibendum iaculis. Pellentesque varius dolor et luctus consectetur. Duis et enim at tellus tempus aliquam eget a dolor. Proin sit amet lacus at augue tincidunt pellentesque nec non elit. Nulla malesuada maximus dui, quis pretium dolor dapibus nec.", 1)]
+    public async Task UpdateAsync_Cidade_ShouldNotifyErrorMessage(
+        string invalidCidade,
+        int expectedTimes)
+    {
+        // Arrange
+        var expectedErrorMessages = new List<string>()
+        {
+            "O campo Cidade precisa ser fornecido",
+            "O campo Cidade precisa ter entre 2 e 100 caracteres"
+        };
+
+        var endereco = EnderecoBuilder.Instance.Build();
+        endereco.Cidade = invalidCidade;
+
+        _notifier
+            .Setup(serive => serive.Handle(It.IsAny<Notification>()))
+            .Callback((Notification notificationCb) =>
+            {
+                notificationCb.Should().NotBeNull();
+                expectedErrorMessages.Should().Contain(notificationCb.Message);
+            });
+
+        // Act
+        await _enderecoService.UpdateAsync(endereco);
+
+        // Assert
+        _enderecoRepository.Verify(
+            repository => repository.UpdateAsync(It.IsAny<Endereco>()),
+            Times.Never());
+
+        _notifier.Verify(
+            service => service.Handle(It.IsAny<Notification>()),
+            Times.Exactly(expectedTimes));
+    }
+
+    [Theory(DisplayName = $"{ClassName} UpdateAsync Estado Should notify error message")]
+    [InlineData("", 2)]
+    [InlineData(null, 1)]
+    [InlineData("L", 1)]
+    [InlineData("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat ligula tellus, eget iaculis arcu congue ut. Etiam quis commodo ipsum. Praesent sed metus consectetur, vestibulum felis non, dictum arcu. Nam a nulla ac purus faucibus vulputate. In pharetra ligula non posuere laoreet. Aliquam in commodo eros. Fusce condimentum auctor quam. Sed vitae augue vitae mauris pellentesque interdum. Fusce auctor risus eleifend nisl bibendum iaculis. Pellentesque varius dolor et luctus consectetur. Duis et enim at tellus tempus aliquam eget a dolor. Proin sit amet lacus at augue tincidunt pellentesque nec non elit. Nulla malesuada maximus dui, quis pretium dolor dapibus nec.", 1)]
+    public async Task UpdateAsync_Estado_ShouldNotifyErrorMessage(
+        string invalidEstado,
+        int expectedTimes)
+    {
+        // Arrange
+        var expectedErrorMessages = new List<string>()
+        {
+            "O campo Estado precisa ser fornecido",
+            "O campo Estado precisa ter entre 2 e 50 caracteres"
+        };
+
+        var endereco = EnderecoBuilder.Instance.Build();
+        endereco.Estado = invalidEstado;
+
+        _notifier
+            .Setup(serive => serive.Handle(It.IsAny<Notification>()))
+            .Callback((Notification notificationCb) =>
+            {
+                notificationCb.Should().NotBeNull();
+                expectedErrorMessages.Should().Contain(notificationCb.Message);
+            });
+
+        // Act
+        await _enderecoService.UpdateAsync(endereco);
+
+        // Assert
+        _enderecoRepository.Verify(
+            repository => repository.UpdateAsync(It.IsAny<Endereco>()),
+            Times.Never());
+
+        _notifier.Verify(
+            service => service.Handle(It.IsAny<Notification>()),
+            Times.Exactly(expectedTimes));
+    }
+
     #endregion 
 }
