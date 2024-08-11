@@ -1,17 +1,16 @@
 ﻿using DevIO.Business.Models.Base;
 using DevIO.Business.Models.Enums;
 
-namespace DevIO.Business.Models
-{
-    public class Fornecedor : Entity
-    {
-        public string Nome { get; set; }
-        public string Documento { get; set; }
-        public TipoFornecedor TipoFornecedor { get; set; }
-        public Endereco Endereco { get; set; }
-        public bool Ativo { get; set; }
+namespace DevIO.Business.Models;
 
-        // EF Relations
-        public IEnumerable<Produto> Produtos { get; set; }
-    }
+public class Fornecedor : Entity
+{
+    public string Nome { get; set; }
+    public string Documento { get; set; }
+    public TipoFornecedor TipoFornecedor { get; set; }
+    public Endereco Endereco { get; set; }
+    public bool Ativo { get; set; }
+
+    // EF Relations
+    public IEnumerable<Produto> Produtos { get; set; }
 }
