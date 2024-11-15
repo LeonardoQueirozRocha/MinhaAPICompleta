@@ -43,7 +43,10 @@ public class FornecedorService : BaseService, IFornecedorService
     public async Task<bool> AddAsync(Fornecedor fornecedor)
     {
         if (!Validate(new FornecedorValidator(), fornecedor) ||
-            !Validate(new EnderecoValidator(), fornecedor.Endereco)) return false;
+            !Validate(new EnderecoValidator(), fornecedor.Endereco))
+        {
+            return false;
+        }
 
         var fornecedores = await _fornecedorRepository.SearchAsync(f => f.Documento == fornecedor.Documento);
 

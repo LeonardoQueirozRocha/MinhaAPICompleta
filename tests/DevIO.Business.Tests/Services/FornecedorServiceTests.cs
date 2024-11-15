@@ -1,6 +1,8 @@
+using Bogus;
 using DevIO.Business.Configurations;
 using DevIO.Business.Interfaces.Notifications;
 using DevIO.Business.Interfaces.Repository;
+using DevIO.Business.Models.Enums;
 using DevIO.Business.Services;
 using DevIO.Utils.Tests.Builders.Business.Configurations;
 using DevIO.Utils.Tests.Builders.Business.Models;
@@ -149,7 +151,8 @@ public class FornecedorServiceTests
 
     #region GetFornecedorProdutosEnderecoAsync
 
-    [Fact(DisplayName = $"{ClassName} GetFornecedorProdutosEnderecoAsync Should return supplier with products and address")]
+    [Fact(DisplayName =
+        $"{ClassName} GetFornecedorProdutosEnderecoAsync Should return supplier with products and address")]
     public async Task GetFornecedorProdutosEnderecoAsync_ShouldReturnSupplierWithProductsAndAddress()
     {
         // Arrange
@@ -194,6 +197,116 @@ public class FornecedorServiceTests
             service => service.GetFornecedorProdutosEnderecoAsync(It.IsAny<Guid>()),
             Times.Once());
     }
+
+    #endregion
+
+    #region AddAsync
+
+    [Fact(DisplayName = $"{ClassName} AddAsync should return false when fornecedor Nome is Empty")]
+    public async Task AddAsync_ShouldReturnFalse_WhenFornecedorIsInvalid()
+    {
+        // Arrange
+        var fornecedor = FornecedorBuilder.Instance.Build();
+        fornecedor.Nome = string.Empty;
+
+        // Act
+        var result = await _fornecedorService.AddAsync(fornecedor);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    [Theory(DisplayName = $"{ClassName} AddAsync should return false when fornecedor Name Lenght is invalid")]
+    [InlineData(1)]
+    [InlineData(101)]
+    public async Task AddAsync_ShouldReturnFalse_WhenFornecedorNameLenghtIsInvalid(int lenght)
+    {
+        // Arrange
+        var fornecedor = FornecedorBuilder.Instance.Build();
+        fornecedor.Nome = new Faker("pt_BR").Random.String(lenght);
+
+        // Act
+        var result = await _fornecedorService.AddAsync(fornecedor);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    [Theory(DisplayName = $"{ClassName} AddAsync should return false when Pessoa Fisica document lenght is invalid")]
+    [InlineData(10)]
+    [InlineData(12)]
+    public async Task AddAsync_ShouldReturnFalse_WhenPessoaFisicaDocumentLenghtIsInvalid(int lenght)
+    {
+        // Arrange
+        var fornecedor = FornecedorBuilder.Instance.Build();
+        fornecedor.TipoFornecedor = TipoFornecedor.PessoaFisica;
+        fornecedor.Documento = new Faker("pt_BR").Random.String(lenght);
+
+        // Act
+        var result = await _fornecedorService.AddAsync(fornecedor);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    [Fact(DisplayName = $"{ClassName} AddAsync should return false when Pessoa Fisica document is invalid")]
+    public async Task AddAsync_ShouldReturnFalse_WhenPessoaFisicaDocumentIsInvalid()
+    {
+        // Arrange
+        var fornecedor = FornecedorBuilder.Instance.Build();
+        fornecedor.TipoFornecedor = TipoFornecedor.PessoaFisica;
+        fornecedor.Documento = new Faker("pt_BR").Random.ReplaceNumbers("###########");
+
+        // Act
+        var result = await _fornecedorService.AddAsync(fornecedor);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+    
+    [Theory(DisplayName = $"{ClassName} AddAsync should return false when Pessoa Juridica document lenght is invalid")]
+    [InlineData(13)]
+    [InlineData(15)]
+    public async Task AddAsync_ShouldReturnFalse_WhenPessoaJuridicaDocumentLenghtIsInvalid(int lenght)
+    {
+        // Arrange
+        var fornecedor = FornecedorBuilder.Instance.Build();
+        fornecedor.TipoFornecedor = TipoFornecedor.PessoaJuridica;
+        fornecedor.Documento = new Faker("pt_BR").Random.String(lenght);
+
+        // Act
+        var result = await _fornecedorService.AddAsync(fornecedor);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    [Fact(DisplayName = $"{ClassName} AddAsync should return false when Pessoa Juridica document is invalid")]
+    public async Task AddAsync_ShouldReturnFalse_WhenPessoaJuridicaDocumentIsInvalid()
+    {
+        // Arrange
+        var fornecedor = FornecedorBuilder.Instance.Build();
+        fornecedor.TipoFornecedor = TipoFornecedor.PessoaJuridica;
+        fornecedor.Documento = new Faker("pt_BR").Random.ReplaceNumbers("##############");
+
+        // Act
+        var result = await _fornecedorService.AddAsync(fornecedor);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    #endregion
+
+    #region UpdateAsync
+
+    // TODO: Implement unit tests for UpdateAsync method
+
+    #endregion
+
+    #region DeleteAsync
+
+    // TODO: Implement unit tests for DeleteAsync method
 
     #endregion
 }
