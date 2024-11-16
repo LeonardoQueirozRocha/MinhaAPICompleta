@@ -26,5 +26,6 @@ public class FornecedorBuilder : LazyFakerBuilder<Fornecedor>
                     => current.TipoFornecedor is TipoFornecedor.PessoaFisica
                         ? setter.Person.Cpf(includeFormatSymbols: false)
                         : setter.Company.Cnpj(includeFormatSymbols: false))
-            .RuleFor(op => op.Ativo, setter => setter.Random.Bool());
+            .RuleFor(op => op.Ativo, setter => setter.Random.Bool())
+            .RuleFor(op => op.Endereco, _ => EnderecoBuilder.Instance.Build());
 }
