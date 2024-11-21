@@ -63,7 +63,10 @@ public class FornecedorService : BaseService, IFornecedorService
 
     public async Task<bool> UpdateAsync(Fornecedor fornecedor)
     {
-        if (!Validate(new FornecedorValidator(), fornecedor)) return false;
+        if (!Validate(new FornecedorValidator(), fornecedor))
+        {
+            return false;
+        }
 
         var fornecedorDb = await _fornecedorRepository.GetByIdAsync(fornecedor.Id);
 

@@ -5,6 +5,7 @@ using DevIO.Business.Interfaces.Notifications;
 using DevIO.Business.Interfaces.Repository;
 using DevIO.Business.Models;
 using DevIO.Business.Models.Enums;
+using DevIO.Business.Notifications;
 using DevIO.Business.Services;
 using DevIO.Utils.Tests.Builders.Business.Configurations;
 using DevIO.Utils.Tests.Builders.Business.Models;
@@ -46,6 +47,8 @@ public class FornecedorServiceTests
         var fornecedores = FornecedorBuilder.Instance
             .BuildCollection()
             .ToList();
+
+        fornecedores.ForEach(fornecedor => fornecedor.Endereco = null);
 
         _fornecedorRespository
             .Setup(repository => repository.GetAllAsync())
@@ -504,7 +507,7 @@ public class FornecedorServiceTests
             repository => repository.AddAsync(It.IsAny<Fornecedor>()),
             Times.Never());
     }
-    
+
     [Fact(DisplayName = $"{ClassName} AddAsync should return false when Fornecedor don't exists")]
     public async Task AddAsync_ShouldReturnTrue_WhenFornecedorDoNotExists()
     {
@@ -536,7 +539,197 @@ public class FornecedorServiceTests
 
     #region UpdateAsync
 
-    // TODO: Implement unit tests for UpdateAsync method
+    [Fact(DisplayName = $"{ClassName} UpdateAsync should return false when fornecedor Nome is Empty")]
+    public async Task UpdateAsync_ShouldReturnFalse_WhenFornecedorIsInvalid()
+    {
+        // Arrange
+        var fornecedor = FornecedorBuilder.Instance.Build();
+        fornecedor.Nome = string.Empty;
+
+        // Act
+        var result = await _fornecedorService.UpdateAsync(fornecedor);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    [Theory(DisplayName = $"{ClassName} UpdateAsync should return false when fornecedor Name Lenght is invalid")]
+    [InlineData(1)]
+    [InlineData(101)]
+    public async Task UpdateAsync_ShouldReturnFalse_WhenFornecedorNameLenghtIsInvalid(int lenght)
+    {
+        // Arrange
+        var fornecedor = FornecedorBuilder.Instance.Build();
+        fornecedor.Nome = _faker.Random.String(lenght);
+
+        // Act
+        var result = await _fornecedorService.UpdateAsync(fornecedor);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    [Theory(DisplayName = $"{ClassName} UpdateAsync should return false when Pessoa Fisica document lenght is invalid")]
+    [InlineData(10)]
+    [InlineData(12)]
+    public async Task UpdateAsync_ShouldReturnFalse_WhenPessoaFisicaDocumentLenghtIsInvalid(int lenght)
+    {
+        // Arrange
+        var fornecedor = FornecedorBuilder.Instance.Build();
+        fornecedor.TipoFornecedor = TipoFornecedor.PessoaFisica;
+        fornecedor.Documento = _faker.Random.String2(lenght);
+
+        // Act
+        var result = await _fornecedorService.UpdateAsync(fornecedor);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    [Fact(DisplayName = $"{ClassName} UpdateAsync should return false when Pessoa Fisica document is invalid")]
+    public async Task UpdateAsync_ShouldReturnFalse_WhenPessoaFisicaDocumentIsInvalid()
+    {
+        // Arrange
+        var fornecedor = FornecedorBuilder.Instance.Build();
+        fornecedor.TipoFornecedor = TipoFornecedor.PessoaFisica;
+        fornecedor.Documento = _faker.Random.ReplaceNumbers("###########");
+
+        // Act
+        var result = await _fornecedorService.UpdateAsync(fornecedor);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    [Theory(DisplayName =
+        $"{ClassName} UpdateAsync should return false when Pessoa Juridica document lenght is invalid")]
+    [InlineData(13)]
+    [InlineData(15)]
+    public async Task UpdateAsync_ShouldReturnFalse_WhenPessoaJuridicaDocumentLenghtIsInvalid(int lenght)
+    {
+        // Arrange
+        var fornecedor = FornecedorBuilder.Instance.Build();
+        fornecedor.TipoFornecedor = TipoFornecedor.PessoaJuridica;
+        fornecedor.Documento = _faker.Random.String2(lenght);
+
+        // Act
+        var result = await _fornecedorService.UpdateAsync(fornecedor);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    [Fact(DisplayName = $"{ClassName} UpdateAsync should return false when Pessoa Juridica document is invalid")]
+    public async Task UpdateAsync_ShouldReturnFalse_WhenPessoaJuridicaDocumentIsInvalid()
+    {
+        // Arrange
+        var fornecedor = FornecedorBuilder.Instance.Build();
+        fornecedor.TipoFornecedor = TipoFornecedor.PessoaJuridica;
+        fornecedor.Documento = _faker.Random.ReplaceNumbers("##############");
+
+        // Act
+        var result = await _fornecedorService.UpdateAsync(fornecedor);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    [Fact(DisplayName = $"{ClassName} UpdateAsync should return false when fornecedor is not found")]
+    public async Task UpdateAsync_ShouldReturnFalse_WhenFornecedorIsNotFound()
+    {
+        // Arrange
+        var fornecedor = FornecedorBuilder.Instance.Build();
+
+        _fornecedorRespository
+            .Setup(repository => repository.GetByIdAsync(It.IsAny<Guid>()))
+            .Callback((Guid idCb) => idCb.Should().Be(fornecedor.Id))
+            .ReturnsAsync((Fornecedor)null!);
+
+        _notifier
+            .Setup(notification => notification.Handle(It.IsAny<Notification>()))
+            .Callback((Notification notificationCb) =>
+                notificationCb.Message.Should().Be(_validationMessages.SupplierNotFound));
+
+        // Act
+        var result = await _fornecedorService.UpdateAsync(fornecedor);
+
+        // Assert
+        result.Should().BeFalse();
+
+        _fornecedorRespository.Verify(
+            repository => repository.GetByIdAsync(It.IsAny<Guid>()),
+            Times.Once);
+
+        _notifier.Verify(
+            notification => notification.Handle(It.IsAny<Notification>()),
+            Times.Once);
+    }
+
+    [Fact(DisplayName = $"{ClassName} UpdateAsync should return false when fornecedor already exists")]
+    public async Task UpdateAsync_ShouldReturnFalse_WhenFornecedorAlreadyExist()
+    {
+        // Arrange
+        var fornecedor = FornecedorBuilder.Instance.Build();
+
+        _fornecedorRespository
+            .Setup(repository => repository.GetByIdAsync(It.IsAny<Guid>()))
+            .Callback((Guid idCb) => idCb.Should().Be(fornecedor.Id))
+            .ReturnsAsync(fornecedor);
+
+        _notifier
+            .Setup(notification => notification.Handle(It.IsAny<Notification>()))
+            .Callback((Notification notificationCb) =>
+                notificationCb.Message.Should().Be(_validationMessages.SupplierAlreadyExist));
+
+        // Act
+        var result = await _fornecedorService.UpdateAsync(fornecedor);
+
+        // Assert
+        result.Should().BeFalse();
+
+        _fornecedorRespository.Verify(
+            repository => repository.GetByIdAsync(It.IsAny<Guid>()),
+            Times.Once);
+
+        _notifier.Verify(
+            notification => notification.Handle(It.IsAny<Notification>()),
+            Times.Once);
+    }
+
+    [Fact(DisplayName = $"{ClassName} UpdateAsync should return true when fornecedor is able to update")]
+    public async Task UpdateAsync_ShouldReturnTrue_WhenFornecedorIsAbleToUpdate()
+    {
+        // Arrange
+        var fornecedorToUpdate = FornecedorBuilder.Instance.Build();
+        var fornecedorFromDatabase = FornecedorBuilder.Instance.Build();
+
+        _fornecedorRespository
+            .Setup(repository => repository.GetByIdAsync(It.IsAny<Guid>()))
+            .Callback((Guid idCb) => idCb.Should().Be(fornecedorToUpdate.Id))
+            .ReturnsAsync(fornecedorFromDatabase);
+
+        _fornecedorRespository
+            .Setup(repository => repository.UpdateAsync(It.IsAny<Fornecedor>()))
+            .Callback((Fornecedor fornecedorCb) => fornecedorCb.Should().BeEquivalentTo(fornecedorToUpdate));
+
+        // Act
+        var result = await _fornecedorService.UpdateAsync(fornecedorToUpdate);
+
+        // Assert
+        result.Should().BeTrue();
+
+        _fornecedorRespository.Verify(
+            repository => repository.GetByIdAsync(It.IsAny<Guid>()),
+            Times.Once);
+
+        _notifier.Verify(
+            notification => notification.Handle(It.IsAny<Notification>()),
+            Times.Never);
+
+        _fornecedorRespository.Verify(
+            repository => repository.UpdateAsync(It.IsAny<Fornecedor>()),
+            Times.Once);
+    }
 
     #endregion
 
