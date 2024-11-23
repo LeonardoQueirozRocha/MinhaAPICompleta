@@ -168,7 +168,9 @@ public class EnderecoServiceTests
     [InlineData("", 2)]
     [InlineData(null, 1)]
     [InlineData("L", 1)]
-    [InlineData("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat ligula tellus, eget iaculis arcu congue ut. Etiam quis commodo ipsum. Praesent sed metus consectetur, vestibulum felis non, dictum arcu. Nam a nulla ac purus faucibus vulputate. In pharetra ligula non posuere laoreet. Aliquam in commodo eros. Fusce condimentum auctor quam. Sed vitae augue vitae mauris pellentesque interdum. Fusce auctor risus eleifend nisl bibendum iaculis. Pellentesque varius dolor et luctus consectetur. Duis et enim at tellus tempus aliquam eget a dolor. Proin sit amet lacus at augue tincidunt pellentesque nec non elit. Nulla malesuada maximus dui, quis pretium dolor dapibus nec.", 1)]
+    [InlineData(
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat ligula tellus, eget iaculis arcu congue ut. Etiam quis commodo ipsum. Praesent sed metus consectetur, vestibulum felis non, dictum arcu. Nam a nulla ac purus faucibus vulputate. In pharetra ligula non posuere laoreet. Aliquam in commodo eros. Fusce condimentum auctor quam. Sed vitae augue vitae mauris pellentesque interdum. Fusce auctor risus eleifend nisl bibendum iaculis. Pellentesque varius dolor et luctus consectetur. Duis et enim at tellus tempus aliquam eget a dolor. Proin sit amet lacus at augue tincidunt pellentesque nec non elit. Nulla malesuada maximus dui, quis pretium dolor dapibus nec.",
+        1)]
     public async Task UpdateAsync_Logradouro_ShouldNotifyErrorMessage(
         string invalidLogradouro,
         int expectedTimes)
@@ -207,7 +209,9 @@ public class EnderecoServiceTests
     [Theory(DisplayName = $"{ClassName} UpdateAsync Numero Should notify error message")]
     [InlineData("", 2)]
     [InlineData(null, 1)]
-    [InlineData("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat ligula tellus, eget iaculis arcu congue ut. Etiam quis commodo ipsum. Praesent sed metus consectetur, vestibulum felis non, dictum arcu. Nam a nulla ac purus faucibus vulputate. In pharetra ligula non posuere laoreet. Aliquam in commodo eros. Fusce condimentum auctor quam. Sed vitae augue vitae mauris pellentesque interdum. Fusce auctor risus eleifend nisl bibendum iaculis. Pellentesque varius dolor et luctus consectetur. Duis et enim at tellus tempus aliquam eget a dolor. Proin sit amet lacus at augue tincidunt pellentesque nec non elit. Nulla malesuada maximus dui, quis pretium dolor dapibus nec.", 1)]
+    [InlineData(
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat ligula tellus, eget iaculis arcu congue ut. Etiam quis commodo ipsum. Praesent sed metus consectetur, vestibulum felis non, dictum arcu. Nam a nulla ac purus faucibus vulputate. In pharetra ligula non posuere laoreet. Aliquam in commodo eros. Fusce condimentum auctor quam. Sed vitae augue vitae mauris pellentesque interdum. Fusce auctor risus eleifend nisl bibendum iaculis. Pellentesque varius dolor et luctus consectetur. Duis et enim at tellus tempus aliquam eget a dolor. Proin sit amet lacus at augue tincidunt pellentesque nec non elit. Nulla malesuada maximus dui, quis pretium dolor dapibus nec.",
+        1)]
     public async Task UpdateAsync_Numero_ShouldNotifyErrorMessage(
         string invalidNumero,
         int expectedTimes)
@@ -287,7 +291,9 @@ public class EnderecoServiceTests
     [InlineData("", 2)]
     [InlineData(null, 1)]
     [InlineData("L", 1)]
-    [InlineData("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat ligula tellus, eget iaculis arcu congue ut. Etiam quis commodo ipsum. Praesent sed metus consectetur, vestibulum felis non, dictum arcu. Nam a nulla ac purus faucibus vulputate. In pharetra ligula non posuere laoreet. Aliquam in commodo eros. Fusce condimentum auctor quam. Sed vitae augue vitae mauris pellentesque interdum. Fusce auctor risus eleifend nisl bibendum iaculis. Pellentesque varius dolor et luctus consectetur. Duis et enim at tellus tempus aliquam eget a dolor. Proin sit amet lacus at augue tincidunt pellentesque nec non elit. Nulla malesuada maximus dui, quis pretium dolor dapibus nec.", 1)]
+    [InlineData(
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat ligula tellus, eget iaculis arcu congue ut. Etiam quis commodo ipsum. Praesent sed metus consectetur, vestibulum felis non, dictum arcu. Nam a nulla ac purus faucibus vulputate. In pharetra ligula non posuere laoreet. Aliquam in commodo eros. Fusce condimentum auctor quam. Sed vitae augue vitae mauris pellentesque interdum. Fusce auctor risus eleifend nisl bibendum iaculis. Pellentesque varius dolor et luctus consectetur. Duis et enim at tellus tempus aliquam eget a dolor. Proin sit amet lacus at augue tincidunt pellentesque nec non elit. Nulla malesuada maximus dui, quis pretium dolor dapibus nec.",
+        1)]
     public async Task UpdateAsync_Bairro_ShouldNotifyErrorMessage(
         string invalidBairro,
         int expectedTimes)
@@ -327,7 +333,9 @@ public class EnderecoServiceTests
     [InlineData("", 2)]
     [InlineData(null, 1)]
     [InlineData("L", 1)]
-    [InlineData("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat ligula tellus, eget iaculis arcu congue ut. Etiam quis commodo ipsum. Praesent sed metus consectetur, vestibulum felis non, dictum arcu. Nam a nulla ac purus faucibus vulputate. In pharetra ligula non posuere laoreet. Aliquam in commodo eros. Fusce condimentum auctor quam. Sed vitae augue vitae mauris pellentesque interdum. Fusce auctor risus eleifend nisl bibendum iaculis. Pellentesque varius dolor et luctus consectetur. Duis et enim at tellus tempus aliquam eget a dolor. Proin sit amet lacus at augue tincidunt pellentesque nec non elit. Nulla malesuada maximus dui, quis pretium dolor dapibus nec.", 1)]
+    [InlineData(
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat ligula tellus, eget iaculis arcu congue ut. Etiam quis commodo ipsum. Praesent sed metus consectetur, vestibulum felis non, dictum arcu. Nam a nulla ac purus faucibus vulputate. In pharetra ligula non posuere laoreet. Aliquam in commodo eros. Fusce condimentum auctor quam. Sed vitae augue vitae mauris pellentesque interdum. Fusce auctor risus eleifend nisl bibendum iaculis. Pellentesque varius dolor et luctus consectetur. Duis et enim at tellus tempus aliquam eget a dolor. Proin sit amet lacus at augue tincidunt pellentesque nec non elit. Nulla malesuada maximus dui, quis pretium dolor dapibus nec.",
+        1)]
     public async Task UpdateAsync_Cidade_ShouldNotifyErrorMessage(
         string invalidCidade,
         int expectedTimes)
@@ -367,7 +375,9 @@ public class EnderecoServiceTests
     [InlineData("", 2)]
     [InlineData(null, 1)]
     [InlineData("L", 1)]
-    [InlineData("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat ligula tellus, eget iaculis arcu congue ut. Etiam quis commodo ipsum. Praesent sed metus consectetur, vestibulum felis non, dictum arcu. Nam a nulla ac purus faucibus vulputate. In pharetra ligula non posuere laoreet. Aliquam in commodo eros. Fusce condimentum auctor quam. Sed vitae augue vitae mauris pellentesque interdum. Fusce auctor risus eleifend nisl bibendum iaculis. Pellentesque varius dolor et luctus consectetur. Duis et enim at tellus tempus aliquam eget a dolor. Proin sit amet lacus at augue tincidunt pellentesque nec non elit. Nulla malesuada maximus dui, quis pretium dolor dapibus nec.", 1)]
+    [InlineData(
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat ligula tellus, eget iaculis arcu congue ut. Etiam quis commodo ipsum. Praesent sed metus consectetur, vestibulum felis non, dictum arcu. Nam a nulla ac purus faucibus vulputate. In pharetra ligula non posuere laoreet. Aliquam in commodo eros. Fusce condimentum auctor quam. Sed vitae augue vitae mauris pellentesque interdum. Fusce auctor risus eleifend nisl bibendum iaculis. Pellentesque varius dolor et luctus consectetur. Duis et enim at tellus tempus aliquam eget a dolor. Proin sit amet lacus at augue tincidunt pellentesque nec non elit. Nulla malesuada maximus dui, quis pretium dolor dapibus nec.",
+        1)]
     public async Task UpdateAsync_Estado_ShouldNotifyErrorMessage(
         string invalidEstado,
         int expectedTimes)
@@ -403,5 +413,21 @@ public class EnderecoServiceTests
             Times.Exactly(expectedTimes));
     }
 
-    #endregion 
+    #endregion
+
+    #region Dispose
+
+    [Fact(DisplayName = $"{ClassName} Dispose should dispose dependencies")]
+    public void Dispose_ShouldDisposeDependencies()
+    {
+        // Arrange && Act
+        _enderecoService.Dispose();
+
+        // Assert
+        _enderecoRepository.Verify(
+            repository => repository.Dispose(),
+            Times.Once);
+    }
+
+    #endregion
 }

@@ -873,4 +873,26 @@ public class FornecedorServiceTests
     }
 
     #endregion
+
+    #region Dispose
+
+
+    [Fact(DisplayName = $"{ClassName} Dispose should dispose dependencies")]
+    public void Dispose_ShouldDisposeDependencies()
+    {
+        // Arrange && Act
+        _fornecedorService.Dispose();
+
+        // Assert
+        _fornecedorRespository.Verify(
+            repository => repository.Dispose(),
+            Times.Once);
+
+        _enderecoRepository.Verify(
+            repository => repository.Dispose(),
+            Times.Once);
+
+    }
+
+    #endregion
 }
