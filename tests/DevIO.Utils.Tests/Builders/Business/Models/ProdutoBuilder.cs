@@ -12,6 +12,7 @@ public class ProdutoBuilder : LazyFakerBuilder<Produto>
 
     protected override Faker<Produto> Factory() =>
         new Faker<Produto>(Locale)
+            .RuleFor(op => op.Id, setter => setter.Random.Guid())
             .RuleFor(op => op.FornecedorId, setter => setter.Random.Guid())
             .RuleFor(op => op.Nome, setter => setter.Commerce.Product())
             .RuleFor(op => op.Descricao, setter => setter.Commerce.ProductDescription())

@@ -6,7 +6,9 @@ namespace DevIO.Business.Interfaces.Repository
     public interface IProdutoRepository : IRepository<Produto>
     {
         Task<IEnumerable<Produto>> GetProdutosByFornecedorAsync(Guid fornecedorId);
-        Task<IEnumerable<Produto>> GetProdutosFornecedoresAsync();
+        
+        Task<List<Produto>> GetProdutosFornecedoresAsync();
+        
         Task<Produto> GetProdutoFornecedorAsync(Guid id);
     }
 }
