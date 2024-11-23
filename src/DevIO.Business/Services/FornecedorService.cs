@@ -89,7 +89,9 @@ public class FornecedorService : BaseService, IFornecedorService
 
     public async Task<bool> DeleteAsync(Guid id)
     {
-        if (_fornecedorRepository.GetFornecedorProdutosEnderecoAsync(id).Result.Produtos.Any())
+        var fornecedor = await _fornecedorRepository.GetFornecedorProdutosEnderecoAsync(id);
+        
+        if (fornecedor.Produtos.Any())
         {
             Notify(_validationMessages.SupplierHasRegisteredProducts);
             return false;

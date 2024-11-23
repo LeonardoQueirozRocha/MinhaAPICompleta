@@ -16,6 +16,7 @@ public class FornecedorBuilder : LazyFakerBuilder<Fornecedor>
 
     protected override Faker<Fornecedor> Factory() =>
         new Faker<Fornecedor>(Locale)
+            .RuleFor(op => op.Id, setter => setter.Random.Guid())
             .RuleFor(op => op.Nome, setter => setter.Name.FindName())
             .RuleFor(
                 op => op.TipoFornecedor,
@@ -27,5 +28,6 @@ public class FornecedorBuilder : LazyFakerBuilder<Fornecedor>
                         ? setter.Person.Cpf(includeFormatSymbols: false)
                         : setter.Company.Cnpj(includeFormatSymbols: false))
             .RuleFor(op => op.Ativo, setter => setter.Random.Bool())
-            .RuleFor(op => op.Endereco, _ => EnderecoBuilder.Instance.Build());
+            .RuleFor(op => op.Endereco, _ => EnderecoBuilder.Instance.Build())
+            .RuleFor(op => op.Produtos, _ => ProdutoBuilder.Instance.BuildCollection(1));
 }

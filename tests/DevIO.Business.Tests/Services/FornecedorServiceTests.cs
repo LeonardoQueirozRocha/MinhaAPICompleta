@@ -735,7 +735,138 @@ public class FornecedorServiceTests
 
     #region DeleteAsync
 
-    // TODO: Implement unit tests for DeleteAsync method
+    [Fact(DisplayName = $"{ClassName} DeleteAsync should return false when fornecedor has registered products")]
+    public async Task DeleteAsync_ShouldReturnFalse_WhenFornecedorHasRegisteredProducts()
+    {
+        // Arrange
+        var fornecedorId = Guid.NewGuid();
+        var fornecedor = FornecedorBuilder.Instance.Build();
+
+        _fornecedorRespository
+            .Setup(repository => repository.GetFornecedorProdutosEnderecoAsync(It.IsAny<Guid>()))
+            .Callback((Guid fornecedorIdCb) => fornecedorIdCb.Should().Be(fornecedorId))
+            .ReturnsAsync(fornecedor);
+
+        _notifier
+            .Setup(notification => notification.Handle(It.IsAny<Notification>()))
+            .Callback((Notification notificationCb) =>
+                notificationCb.Message.Should().BeEquivalentTo(_validationMessages.SupplierHasRegisteredProducts));
+
+        // Act
+        var result = await _fornecedorService.DeleteAsync(fornecedorId);
+
+        // Assert
+        result.Should().BeFalse();
+
+        _fornecedorRespository.Verify(
+            repository => repository.GetFornecedorProdutosEnderecoAsync(It.IsAny<Guid>()),
+            Times.Once);
+
+        _notifier.Verify(
+            notification => notification.Handle(It.IsAny<Notification>()),
+            Times.Once);
+    }
+
+    [Fact(DisplayName = $"{ClassName} DeleteAsync should return true when fornecedor has endereco to delete")]
+    public async Task DeleteAsync_ShouldReturnTrue_WhenFornecedorHasEnderecoToDelete()
+    {
+        // Arrange
+        var fornecedor = FornecedorBuilder.Instance.Build();
+        fornecedor.Produtos = Enumerable.Empty<Produto>();
+
+        _fornecedorRespository
+            .Setup(repository => repository.GetFornecedorProdutosEnderecoAsync(It.IsAny<Guid>()))
+            .Callback((Guid fornecedorIdCb) => fornecedorIdCb.Should().Be(fornecedor.Id))
+            .ReturnsAsync(fornecedor);
+
+        _enderecoRepository
+            .Setup(repository => repository.GetEnderecoByFornecedorAsync(It.IsAny<Guid>()))
+            .Callback((Guid fornecedorIdCb) => fornecedorIdCb.Should().Be(fornecedor.Id))
+            .ReturnsAsync(fornecedor.Endereco);
+
+        _enderecoRepository
+            .Setup(repository => repository.DeleteAsync(It.IsAny<Guid>()))
+            .Callback((Guid enderecoIdCb) => enderecoIdCb.Should().Be(fornecedor.Endereco.Id));
+
+        _fornecedorRespository
+            .Setup(repository => repository.DeleteAsync(It.IsAny<Guid>()))
+            .Callback((Guid fornecedorIdCb) => fornecedorIdCb.Should().Be(fornecedor.Id));
+
+        // Act
+        var result = await _fornecedorService.DeleteAsync(fornecedor.Id);
+
+        // Assert
+        result.Should().BeTrue();
+
+        _fornecedorRespository.Verify(
+            repository => repository.GetFornecedorProdutosEnderecoAsync(It.IsAny<Guid>()),
+            Times.Once);
+
+        _fornecedorRespository.Verify(
+            repository => repository.DeleteAsync(It.IsAny<Guid>()),
+            Times.Once);
+
+        _enderecoRepository.Verify(
+            repository => repository.GetEnderecoByFornecedorAsync(It.IsAny<Guid>()),
+            Times.Once);
+
+        _enderecoRepository.Verify(
+            repository => repository.DeleteAsync(It.IsAny<Guid>()),
+            Times.Once);
+
+        _notifier.Verify(
+            notification => notification.Handle(It.IsAny<Notification>()),
+            Times.Never);
+    }
+
+    [Fact(DisplayName = $"{ClassName} DeleteAsync should return true when fornecedor has not endereco to delete")]
+    public async Task DeleteAsync_ShouldReturnTrue_WhenFornecedorHasNotEnderecoToDelete()
+    {
+        // Arrange
+        var fornecedor = FornecedorBuilder.Instance.Build();
+        fornecedor.Produtos = Enumerable.Empty<Produto>();
+        fornecedor.Endereco = null;
+
+        _fornecedorRespository
+            .Setup(repository => repository.GetFornecedorProdutosEnderecoAsync(It.IsAny<Guid>()))
+            .Callback((Guid fornecedorIdCb) => fornecedorIdCb.Should().Be(fornecedor.Id))
+            .ReturnsAsync(fornecedor);
+
+        _enderecoRepository
+            .Setup(repository => repository.GetEnderecoByFornecedorAsync(It.IsAny<Guid>()))
+            .Callback((Guid fornecedorIdCb) => fornecedorIdCb.Should().Be(fornecedor.Id))
+            .ReturnsAsync(fornecedor.Endereco);
+
+        _fornecedorRespository
+            .Setup(repository => repository.DeleteAsync(It.IsAny<Guid>()))
+            .Callback((Guid fornecedorIdCb) => fornecedorIdCb.Should().Be(fornecedor.Id));
+
+        // Act
+        var result = await _fornecedorService.DeleteAsync(fornecedor.Id);
+
+        // Assert
+        result.Should().BeTrue();
+
+        _fornecedorRespository.Verify(
+            repository => repository.GetFornecedorProdutosEnderecoAsync(It.IsAny<Guid>()),
+            Times.Once);
+
+        _fornecedorRespository.Verify(
+            repository => repository.DeleteAsync(It.IsAny<Guid>()),
+            Times.Once);
+
+        _enderecoRepository.Verify(
+            repository => repository.GetEnderecoByFornecedorAsync(It.IsAny<Guid>()),
+            Times.Once);
+
+        _enderecoRepository.Verify(
+            repository => repository.DeleteAsync(It.IsAny<Guid>()),
+            Times.Never);
+
+        _notifier.Verify(
+            notification => notification.Handle(It.IsAny<Notification>()),
+            Times.Never);
+    }
 
     #endregion
 }
