@@ -483,17 +483,33 @@ public class ProdutoServiceTests
     {
         // Arrange
         var produtoId = Guid.NewGuid();
-        
+
         _produtoRepositoryMock
             .Setup(repository => repository.DeleteAsync(It.IsAny<Guid>()))
             .Callback((Guid produtoIdCb) => produtoIdCb.Should().Be(produtoId));
-        
+
         // Act
         await _produtoService.DeleteAsync(produtoId);
-        
+
         // Assert
         _produtoRepositoryMock.Verify(
-            repository => repository.DeleteAsync(It.IsAny<Guid>()), 
+            repository => repository.DeleteAsync(It.IsAny<Guid>()),
+            Times.Once);
+    }
+
+    #endregion
+
+    #region Dispose
+
+    [Fact(DisplayName = $"{ClassName} Dispose should dispose dependencies")]
+    public void Dispose_ShouldDisposeDependencies()
+    {
+        // Arrange && Act
+        _produtoService.Dispose();
+
+        // Assert
+        _produtoRepositoryMock.Verify(
+            repository => repository.Dispose(),
             Times.Once);
     }
 
