@@ -48,7 +48,11 @@ public class FornecedorServiceTests
             .BuildCollection()
             .ToList();
 
-        fornecedores.ForEach(fornecedor => fornecedor.Endereco = null);
+        fornecedores.ForEach(fornecedor =>
+        {
+            fornecedor.Endereco = null;
+            fornecedor.Produtos = Enumerable.Empty<Produto>();
+        });
 
         _fornecedorRespository
             .Setup(repository => repository.GetAllAsync())
@@ -62,7 +66,7 @@ public class FornecedorServiceTests
         result.Any().Should().BeTrue();
         result.Count().Should().Be(fornecedores.Count);
         result.ToList().ForEach(supplier => supplier.Endereco.Should().BeNull());
-        result.ToList().ForEach(supplier => supplier.Produtos.Should().BeNull());
+        result.ToList().ForEach(supplier => supplier.Produtos.Should().BeNullOrEmpty());
 
         _fornecedorRespository.Verify(
             repository => repository.GetAllAsync(),
