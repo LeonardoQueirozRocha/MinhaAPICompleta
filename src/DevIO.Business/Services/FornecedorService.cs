@@ -43,7 +43,10 @@ public class FornecedorService : BaseService, IFornecedorService
     public async Task<bool> AddAsync(Fornecedor fornecedor)
     {
         if (!Validate(new FornecedorValidator(), fornecedor) ||
-            !Validate(new EnderecoValidator(), fornecedor.Endereco)) return false;
+            !Validate(new EnderecoValidator(), fornecedor.Endereco))
+        {
+            return false;
+        }
 
         var fornecedores = await _fornecedorRepository.SearchAsync(f => f.Documento == fornecedor.Documento);
 
@@ -60,7 +63,10 @@ public class FornecedorService : BaseService, IFornecedorService
 
     public async Task<bool> UpdateAsync(Fornecedor fornecedor)
     {
-        if (!Validate(new FornecedorValidator(), fornecedor)) return false;
+        if (!Validate(new FornecedorValidator(), fornecedor))
+        {
+            return false;
+        }
 
         var fornecedorDb = await _fornecedorRepository.GetByIdAsync(fornecedor.Id);
 
@@ -83,7 +89,9 @@ public class FornecedorService : BaseService, IFornecedorService
 
     public async Task<bool> DeleteAsync(Guid id)
     {
-        if (_fornecedorRepository.GetFornecedorProdutosEnderecoAsync(id).Result.Produtos.Any())
+        var fornecedor = await _fornecedorRepository.GetFornecedorProdutosEnderecoAsync(id);
+        
+        if (fornecedor.Produtos.Any())
         {
             Notify(_validationMessages.SupplierHasRegisteredProducts);
             return false;

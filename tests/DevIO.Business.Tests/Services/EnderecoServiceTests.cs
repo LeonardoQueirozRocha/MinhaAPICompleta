@@ -47,6 +47,7 @@ public class EnderecoServiceTests
         result.Should().NotBeNull();
         result.Any().Should().BeTrue();
         result.Count().Should().Be(enderecos.Count);
+        result.ToList().ForEach(address => address.Fornecedor.Should().BeNull());
 
         _enderecoRepository.Verify(
             service => service.GetAllAsync(),
@@ -57,7 +58,9 @@ public class EnderecoServiceTests
     public async Task GetAllAsync_ShouldReturnEmpty()
     {
         // Arrange
-        var enderecos = new List<Endereco>();
+        var enderecos = EnderecoBuilder.Instance
+            .BuildCollection(0)
+            .ToList();
 
         _enderecoRepository
             .Setup(service => service.GetAllAsync())

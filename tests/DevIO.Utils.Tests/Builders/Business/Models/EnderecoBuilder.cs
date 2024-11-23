@@ -6,12 +6,15 @@ namespace DevIO.Utils.Tests.Builders.Business.Models;
 
 public class EnderecoBuilder : LazyFakerBuilder<Endereco>
 {
-    private EnderecoBuilder() { }
+    private EnderecoBuilder()
+    {
+    }
 
     public static EnderecoBuilder Instance => new();
 
     protected override Faker<Endereco> Factory() =>
-         new Faker<Endereco>(Locale)
+        new Faker<Endereco>(Locale)
+            .RuleFor(op => op.Id, setter => setter.Random.Guid())
             .RuleFor(op => op.FornecedorId, setter => setter.Random.Guid())
             .RuleFor(op => op.Logradouro, setter => setter.Address.StreetName())
             .RuleFor(op => op.Numero, setter => setter.Random.Int(1, 999).ToString())
