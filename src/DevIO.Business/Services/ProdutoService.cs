@@ -22,7 +22,7 @@ namespace DevIO.Business.Services
             _user = user;
         }
 
-        public async Task<IEnumerable<Produto>> GetProdutosFornecedoresAsync()
+        public async Task<List<Produto>> GetProdutosFornecedoresAsync()
         {
             return await _produtoRepository.GetProdutosFornecedoresAsync();
         }
