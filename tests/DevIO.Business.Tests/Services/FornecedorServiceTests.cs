@@ -876,7 +876,6 @@ public class FornecedorServiceTests
 
     #region Dispose
 
-
     [Fact(DisplayName = $"{ClassName} Dispose should dispose dependencies")]
     public void Dispose_ShouldDisposeDependencies()
     {
@@ -891,7 +890,6 @@ public class FornecedorServiceTests
         _enderecoRepository.Verify(
             repository => repository.Dispose(),
             Times.Once);
-
     }
 
     #endregion
