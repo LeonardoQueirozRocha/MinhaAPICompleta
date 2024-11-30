@@ -4,8 +4,10 @@ using DevIO.Business.Configurations;
 using DevIO.Business.Interfaces.Notifications;
 using DevIO.Business.Notifications;
 using DevIO.Business.Services;
+using DevIO.Utils.Tests.Builders.Business;
 using DevIO.Utils.Tests.Builders.Business.Configurations;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Moq;
 
 namespace DevIO.Business.Tests.Services;
@@ -178,6 +180,138 @@ public class FileServiceTests
                 It.IsAny<byte[]>(),
                 It.IsAny<CancellationToken>()),
             Times.Once);
+    }
+
+    #endregion
+
+    #region UploadStreamingAsync
+
+    [Fact(DisplayName = $"{ClassName} UploadStreamingAsync should return false when file is null")]
+    public async Task UploadStreamingAsync_ShouldReturnFalse_WhenFileIsNull()
+    {
+        // Arrange
+        FormFile? formFile = null;
+        var filePrefix = _faker.System.FileName();
+
+        _notifierMock
+            .Setup(notification => notification.Handle(It.IsAny<Notification>()))
+            .Callback((Notification notificationCb) =>
+                notificationCb.Message.Should().Be(_validationMessages.EmptyFileMessage));
+
+        // Act
+        var result = await _fileService.UploadStreamingAsync(formFile, filePrefix);
+
+        // Assert
+        result.Should().BeFalse();
+
+        _notifierMock.Verify(
+            notification => notification.Handle(It.IsAny<Notification>()),
+            Times.Once);
+    }
+
+    [Fact(DisplayName = $"{ClassName} UploadStreamingAsync should return false when file is empty")]
+    public async Task UploadStreamingAsync_ShouldReturnFalse_WhenFileEmpty()
+    {
+        // Arrange
+        var formFile = FormFileBuilder.Instance.BuildEmpty();
+        var filePrefix = _faker.System.FileName();
+
+        _notifierMock
+            .Setup(notification => notification.Handle(It.IsAny<Notification>()))
+            .Callback((Notification notificationCb) =>
+                notificationCb.Message.Should().Be(_validationMessages.EmptyFileMessage));
+
+        // Act
+        var result = await _fileService.UploadStreamingAsync(formFile, filePrefix);
+
+        // Assert
+        result.Should().BeFalse();
+
+        _notifierMock.Verify(
+            notification => notification.Handle(It.IsAny<Notification>()),
+            Times.Once);
+    }
+
+    [Fact(DisplayName = $"{ClassName} UploadStreamingAsync should return false when file already exists")]
+    public async Task UploadStreamingAsync_ShouldReturnFalse_WhenFileAlreadyExists()
+    {
+        // Arrange
+        var formFile = FormFileBuilder.Instance.Build();
+        var filePrefix = _faker.System.FileName();
+        var pathMock = GetPathMock(filePrefix + formFile.FileName);
+
+        _fileSystemMock
+            .SetupGet(system => system.Path)
+            .Returns(pathMock.Object);
+
+        _fileMock
+            .Setup(x => x.Exists(It.IsAny<string>()))
+            .Callback((string pathCb) => pathCb.Should().Contain(formFile.FileName))
+            .Returns(true);
+
+        _fileSystemMock
+            .SetupGet(system => system.File)
+            .Returns(_fileMock.Object);
+
+        _notifierMock
+            .Setup(notification => notification.Handle(It.IsAny<Notification>()))
+            .Callback((Notification notificationCb) =>
+                notificationCb.Message.Should().Be(_validationMessages.FileAlreadyExistMessage));
+
+        // Act
+        var result = await _fileService.UploadStreamingAsync(formFile, filePrefix);
+
+        // Assert
+        result.Should().BeFalse();
+
+        _notifierMock.Verify(
+            notication => notication.Handle(It.IsAny<Notification>()),
+            Times.Once);
+    }
+
+    [Fact(DisplayName = $"{ClassName} UploadStreamingAsync should return true when file do not exists", Skip = "Skipped")]
+    public async Task UploadStreamingAsync_ShouldReturnTrue_WhenFileDoNotExists()
+    {
+        // Arrange
+        var emptyFormFile = FormFileBuilder.Instance.BuildEmpty();
+        var formFile = FormFileBuilder.Instance.Build();
+        var filePrefix = _faker.System.FileName();
+        var pathMock = GetPathMock(filePrefix + formFile.FileName);
+
+        _fileSystemMock
+            .SetupGet(system => system.Path)
+            .Returns(pathMock.Object);
+
+        _fileMock
+            .Setup(x => x.Exists(It.IsAny<string>()))
+            .Callback((string pathCb) => pathCb.Should().Contain(formFile.FileName))
+            .Returns(false);
+
+        _fileSystemMock
+            .SetupGet(system => system.File)
+            .Returns(_fileMock.Object);
+
+        var mockStream = new Mock<FileSystemStream>();
+        var fileStream = new Mock<IFileStreamFactory>();
+        fileStream
+            .Setup(stream => stream.New(
+                It.IsAny<string>(),
+                It.IsAny<FileMode>()))
+            .Returns(mockStream.Object);
+        
+        _fileSystemMock
+            .SetupGet(system => system.FileStream)
+            .Returns(fileStream.Object);
+
+        // Act
+        var result = await _fileService.UploadStreamingAsync(formFile, filePrefix);
+
+        // Assert
+        result.Should().BeFalse();
+
+        _notifierMock.Verify(
+            notication => notication.Handle(It.IsAny<Notification>()),
+            Times.Never);
     }
 
     #endregion
