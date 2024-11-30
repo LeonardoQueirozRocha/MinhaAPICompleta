@@ -1,4 +1,5 @@
-﻿using DevIO.Business.Configurations;
+﻿using System.IO.Abstractions;
+using DevIO.Business.Configurations;
 using DevIO.Business.Interfaces.Notifications;
 using DevIO.Business.Interfaces.Services;
 using DevIO.Business.Services.Base;
@@ -8,12 +9,15 @@ namespace DevIO.Business.Services;
 
 public class FileService : BaseService, IFileService
 {
+    private readonly IFileSystem _fileSystem;
     private readonly ValidationMessages _validationMessages;
 
     public FileService(
+        IFileSystem fileSystem,
         INotifier notifier,
         ValidationMessages validationMessages) : base(notifier)
     {
+        _fileSystem = fileSystem;
         _validationMessages = validationMessages;
     }
 
@@ -27,14 +31,14 @@ public class FileService : BaseService, IFileService
 
         var path = GetFilePath(fileName);
 
-        if (File.Exists(path))
+        if (_fileSystem.File.Exists(path))
         {
             Notify(_validationMessages.FileAlreadyExistMessage);
             return false;
         }
 
         var bytes = Convert.FromBase64String(file);
-        await File.WriteAllBytesAsync(path, bytes);
+        await _fileSystem.File.WriteAllBytesAsync(path!, bytes);
 
         return true;
     }
@@ -49,25 +53,25 @@ public class FileService : BaseService, IFileService
 
         var path = GetFilePath(filePrefix + file.FileName);
 
-        if (File.Exists(path))
+        if (_fileSystem.File.Exists(path))
         {
             Notify(_validationMessages.FileAlreadyExistMessage);
             return false;
         }
 
-        using var stream = new FileStream(path, FileMode.Create);
+        await using var stream = _fileSystem.FileStream.New(path!, FileMode.Create);
         await file.CopyToAsync(stream);
 
         return true;
     }
 
     public void Delete(string fileName)
-    {
-        File.Delete(GetFilePath(fileName));
-    }
+        => _fileSystem.File.Delete(GetFilePath(fileName));
 
     private string GetFilePath(string fileName)
     {
-        return Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/app/demo-webapi/src/assets", fileName);
+        const string projectPah = "wwwroot/app/demo-webapi/src/assets";
+        var currentPath = _fileSystem.Directory.GetCurrentDirectory();
+        return _fileSystem.Path.Combine(currentPath, projectPah, fileName);
     }
 }
